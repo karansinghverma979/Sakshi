@@ -1,0 +1,22 @@
+# --- SAKSHI GITIGNORE ---
+
+# Runtime & Telemetry Logs
+*.log
+
+# Windows System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Environment / Local Configurations
+.env
+.env.local
+.env.*.local
+
+# IDE & Editor Directories
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
