@@ -224,7 +224,7 @@ try {
     })
 
     $ImageTimer = New-Object System.Windows.Threading.DispatcherTimer
-    $ImageTimer.Interval = [TimeSpan]::FromSeconds(15)
+    $ImageTimer.Interval = [TimeSpan]::FromSeconds(3)
     $ImageTimer.Add_Tick({
         if ($ImageFiles.Count -gt 0) {
             $RandomImage = $ImageFiles | Get-Random
