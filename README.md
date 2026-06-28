@@ -77,6 +77,17 @@ Stop-ScheduledTask -TaskName "Sakshi"
 3. The installer will prompt you to name the Scheduled Task (press `Enter` to use the default name **`Sakshi`**).
 4. The system will register the task under your active user session, bypass battery restrictions, enable a 1-minute automatic restart on failure, and launch the service immediately.
 
+### Phase 3: Uninstallation (Clean Teardown)
+To completely stop the daemon and remove its Scheduled Task registry:
+1. Open **PowerShell** as **Administrator**.
+2. Run the de-registration script:
+   ```powershell
+   cd C:\Users\karan\Void\Sakshi
+   .\Uninstall-Service.ps1
+   ```
+3. Enter the name of the Scheduled Task to delete (press `Enter` to use the default name **`Sakshi`**).
+4. The script will safely stop the active loop and remove it from your system task scheduler.
+
 ---
 
 ## 🧬 Git Configuration
