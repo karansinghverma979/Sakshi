@@ -37,7 +37,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 
 [Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IAudioEndpointVolume {
+interface IAudioEndpointVolumeV5 {
     int f(); int g(); int h(); int i();
     int SetMasterVolumeLevelScalar(float fLevel, Guid pguidEventContext);
     int j();
@@ -48,7 +48,7 @@ interface IAudioEndpointVolume {
 }
 
 [Guid("87CE5498-68D6-44E5-9215-6DA47EF883D8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface ISimpleAudioVolume {
+interface ISimpleAudioVolumeV5 {
     int SetMasterVolume(float fLevel, Guid pguidEventContext);
     int GetMasterVolume(out float pfLevel);
     int SetMute([MarshalAs(UnmanagedType.Bool)] bool bMute, Guid pguidEventContext);
@@ -56,7 +56,7 @@ interface ISimpleAudioVolume {
 }
 
 [Guid("F4B1A599-7266-4319-A8CA-E70ACB11E8CD"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IAudioSessionControl {
+interface IAudioSessionControlV5 {
     int GetState(out int pRetVal);
     int GetDisplayName(out IntPtr pRetVal);
     int SetDisplayName([MarshalAs(UnmanagedType.LPWStr)] string Value, Guid EventContext);
@@ -69,7 +69,7 @@ interface IAudioSessionControl {
 }
 
 [Guid("bfb7ff88-7239-4fc9-8fa2-07c950be9c6d"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IAudioSessionControl2 {
+interface IAudioSessionControl2V5 {
     int GetState(out int pRetVal);
     int GetDisplayName(out IntPtr pRetVal);
     int SetDisplayName([MarshalAs(UnmanagedType.LPWStr)] string Value, Guid EventContext);
@@ -86,16 +86,16 @@ interface IAudioSessionControl2 {
 }
 
 [Guid("E2F5BB11-0570-40CA-ACDD-3AA01277DEE8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IAudioSessionEnumerator {
+interface IAudioSessionEnumeratorV5 {
     int GetCount(out int SessionCount);
-    int GetSession(int SessionIndex, out IAudioSessionControl Session);
+    int GetSession(int SessionIndex, out IAudioSessionControlV5 Session);
 }
 
 [Guid("77AA99A0-1BD6-484F-8BC7-2C654C9A9B6F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IAudioSessionManager2 {
+interface IAudioSessionManager2V5 {
     int GetAudioSessionControl(Guid AudioSessionGuid, uint StreamFlags, out IntPtr SessionControl);
     int GetSimpleAudioVolume(Guid AudioSessionGuid, uint StreamFlags, out IntPtr AudioVolume);
-    int GetSessionEnumerator(out IAudioSessionEnumerator SessionList);
+    int GetSessionEnumerator(out IAudioSessionEnumeratorV5 SessionList);
     int RegisterSessionNotification(IntPtr SessionNotification);
     int UnregisterSessionNotification(IntPtr SessionNotification);
     int RegisterDuckNotification([MarshalAs(UnmanagedType.LPWStr)] string sessionID, IntPtr duckNotification);
@@ -105,25 +105,25 @@ interface IAudioSessionManager2 {
 [ComImport]
 [Guid("a5cd92ff-29be-454c-8d04-d82879fb3f1b")]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IVirtualDesktopManager {
+interface IVirtualDesktopManagerV5 {
     int IsWindowOnCurrentVirtualDesktop(IntPtr topLevelWindow, [MarshalAs(UnmanagedType.Bool)] out bool onCurrentDesktop);
     int GetWindowDesktopId(IntPtr topLevelWindow, out Guid desktopId);
     int MoveWindowToDesktop(IntPtr topLevelWindow, ref Guid desktopId);
 }
 
 [Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IMMDevice {
+interface IMMDeviceV5 {
     int Activate(ref Guid id, int clsCtx, int activationParams, [MarshalAs(UnmanagedType.IUnknown)] out object obj);
 }
 
 [Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IMMDeviceEnumerator {
+interface IMMDeviceEnumeratorV5 {
     int f();
-    int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDevice endpoint);
+    int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDeviceV5 endpoint);
 }
 
 [ComImport, Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
-class MMDeviceEnumeratorComObject { }
+class MMDeviceEnumeratorComObjectV5 { }
 
 public class AudioEngineV5 {
     [DllImport("user32.dll")]
@@ -135,12 +135,12 @@ public class AudioEngineV5 {
     [DllImport("winmm.dll", SetLastError = true, CharSet = CharSet.Auto)]
     public static extern bool PlaySound(byte[] pszSound, IntPtr hmod, uint fdwSound);
 
-    private static IVirtualDesktopManager _desktopManager;
+    private static IVirtualDesktopManagerV5 _desktopManager;
 
     static AudioEngineV5() {
         try {
             Type type = Type.GetTypeFromCLSID(new Guid("AA509086-5CA9-4C25-8F95-589D3C07B48A"));
-            _desktopManager = (IVirtualDesktopManager)Activator.CreateInstance(type);
+            _desktopManager = (IVirtualDesktopManagerV5)Activator.CreateInstance(type);
         } catch {
             _desktopManager = null;
         }
@@ -217,14 +217,14 @@ public class AudioEngineV5 {
         });
     }
 
-    private static IAudioEndpointVolume Vol() {
-        var enumerator = new MMDeviceEnumeratorComObject() as IMMDeviceEnumerator;
-        IMMDevice dev = null;
+    private static IAudioEndpointVolumeV5 Vol() {
+        var enumerator = new MMDeviceEnumeratorComObjectV5() as IMMDeviceEnumeratorV5;
+        IMMDeviceV5 dev = null;
         Marshal.ThrowExceptionForHR(enumerator.GetDefaultAudioEndpoint(0, 1, out dev));
         object obj = null;
-        var epvid = typeof(IAudioEndpointVolume).GUID;
+        var epvid = typeof(IAudioEndpointVolumeV5).GUID;
         Marshal.ThrowExceptionForHR(dev.Activate(ref epvid, 23, 0, out obj));
-        return obj as IAudioEndpointVolume;
+        return obj as IAudioEndpointVolumeV5;
     }
 
     public static bool Mute {
@@ -252,9 +252,9 @@ public class AudioEngineV5 {
 
     public static void MuteOtherSessions(bool mute, uint myPid) {
         try {
-            var enumerator = new MMDeviceEnumeratorComObject() as IMMDeviceEnumerator;
+            var enumerator = new MMDeviceEnumeratorComObjectV5() as IMMDeviceEnumeratorV5;
             if (enumerator == null) return;
-            IMMDevice dev = null;
+            IMMDeviceV5 dev = null;
             if (enumerator.GetDefaultAudioEndpoint(0, 1, out dev) != 0 || dev == null) return;
             
             object obj = null;
@@ -264,13 +264,13 @@ public class AudioEngineV5 {
                 return;
             }
             
-            var manager = obj as IAudioSessionManager2;
+            var manager = obj as IAudioSessionManager2V5;
             if (manager == null) {
                 Marshal.ReleaseComObject(dev);
                 return;
             }
             
-            IAudioSessionEnumerator sessionEnum = null;
+            IAudioSessionEnumeratorV5 sessionEnum = null;
             if (manager.GetSessionEnumerator(out sessionEnum) != 0 || sessionEnum == null) {
                 Marshal.ReleaseComObject(manager);
                 Marshal.ReleaseComObject(dev);
@@ -280,9 +280,9 @@ public class AudioEngineV5 {
             int count = 0;
             if (sessionEnum.GetCount(out count) == 0 && count > 0) {
                 for (int i = 0; i < count; i++) {
-                    IAudioSessionControl session = null;
+                    IAudioSessionControlV5 session = null;
                     if (sessionEnum.GetSession(i, out session) == 0 && session != null) {
-                        var session2 = session as IAudioSessionControl2;
+                        var session2 = session as IAudioSessionControl2V5;
                         if (session2 != null) {
                             // Check if it is the system sounds session (HR = 0 means true)
                             if (session2.IsSystemSoundsSession() == 0) {
@@ -296,14 +296,14 @@ public class AudioEngineV5 {
                             // If mute is true: only mute other non-exempt processes.
                             // If mute is false: unmute EVERYTHING unconditionally.
                             if (!mute || !IsExempt(pid, myPid)) {
-                                var simpleVolume = session as ISimpleAudioVolume;
+                                var simpleVolume = session as ISimpleAudioVolumeV5;
                                 if (simpleVolume != null) {
                                     simpleVolume.SetMute(mute, Guid.Empty);
                                 }
                             }
                         } else if (!mute) {
                             // Unmute system sounds / other sessions without session2 control
-                            var simpleVolume = session as ISimpleAudioVolume;
+                            var simpleVolume = session as ISimpleAudioVolumeV5;
                             if (simpleVolume != null) {
                                 simpleVolume.SetMute(false, Guid.Empty);
                             }
