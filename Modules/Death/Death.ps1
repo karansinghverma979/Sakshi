@@ -124,7 +124,7 @@ interface IMMDeviceEnumerator {
 [ComImport, Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
 class MMDeviceEnumeratorComObject { }
 
-public class Audio {
+public class AudioEngine {
     [DllImport("user32.dll")]
     public static extern IntPtr GetForegroundWindow();
 
@@ -133,9 +133,9 @@ public class Audio {
 
     private static IVirtualDesktopManager _desktopManager;
 
-    static Audio() {
+    static AudioEngine() {
         try {
-            Type type = Type.GetTypeFromCLSID(new Guid("aa50908a-2d39-4991-97f7-de3d53459c81"));
+            Type type = Type.GetTypeFromCLSID(new Guid("AA509086-5CA9-4C25-8F95-589D3C07B48A"));
             _desktopManager = (IVirtualDesktopManager)Activator.CreateInstance(type);
         } catch {
             _desktopManager = null;
@@ -219,6 +219,13 @@ public class Audio {
                     if (sessionEnum.GetSession(i, out session) == 0 && session != null) {
                         var session2 = session as IAudioSessionControl2;
                         if (session2 != null) {
+                            // Check if it is the system sounds session (HR = 0 means true)
+                            if (session2.IsSystemSoundsSession() == 0) {
+                                // System Sounds - Do not mute
+                                Marshal.ReleaseComObject(session);
+                                continue;
+                            }
+                            
                             uint pid = 0;
                             session2.GetProcessId(out pid);
                             
@@ -250,11 +257,11 @@ public class Audio {
 "@
 
 try {
-    if (-not ([System.Management.Automation.PSTypeName]"Audio").Type) {
+    if (-not ([System.Management.Automation.PSTypeName]"AudioEngine").Type) {
         Add-Type -TypeDefinition $AudioCode
     }
     $script:MyPid = [System.Diagnostics.Process]::GetCurrentProcess().Id
-    [Audio]::MuteOtherSessions($true, $script:MyPid)
+    [AudioEngine]::MuteOtherSessions($true, $script:MyPid)
 } catch {
     Write-Log "AUDIO INTERFERENCE WARNING: Failed to control session mute states via WASAPI. Details: $_"
 }
@@ -392,7 +399,7 @@ try {
         if ($script:SecondsRemaining -gt 0 -and $null -ne $script:WindowHandle) {
             try {
                 # 1. Virtual Desktop Escape Prevention
-                $isOnCurrent = [Audio]::IsOnCurrentDesktop($script:WindowHandle)
+                $isOnCurrent = [AudioEngine]::IsOnCurrentDesktop($script:WindowHandle)
                 if (-not $isOnCurrent) {
                     $Window.Hide()
                     $Window.Show()
@@ -403,9 +410,9 @@ try {
                 }
 
                 # 2. Foreground Window Focus Lock
-                $fg = [Audio]::GetForegroundWindow()
+                $fg = [AudioEngine]::GetForegroundWindow()
                 if ($fg -ne $script:WindowHandle) {
-                    [Audio]::SetForegroundWindow($script:WindowHandle) | Out-Null
+                    [AudioEngine]::SetForegroundWindow($script:WindowHandle) | Out-Null
                     $Window.Activate() | Out-Null
                     $Window.Focus() | Out-Null
                 }
@@ -421,7 +428,7 @@ try {
         $script:SecondsRemaining--
         
         try {
-            [Audio]::MuteOtherSessions($true, $script:MyPid)
+            [AudioEngine]::MuteOtherSessions($true, $script:MyPid)
         } catch { }
         
         if ($script:SecondsRemaining -gt 0) {
@@ -500,8 +507,8 @@ try {
             $ImageTimer.Stop()
             if ($MediaPlayer -and $BackgroundSoundPath) { $MediaPlayer.Stop(); $MediaPlayer.Close() }
             try {
-                [Audio]::MuteOtherSessions($false, 0)
-                [Audio]::Mute = $false
+                [AudioEngine]::MuteOtherSessions($false, 0)
+                [AudioEngine]::Mute = $false
             } catch { }
         }
     })
