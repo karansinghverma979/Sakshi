@@ -1,6 +1,10 @@
 # <p align="center"><span style="color:#FF3333">👁️ SAKSHI // THE WITNESS v3.0</span></p>
 
 <p align="center">
+  <img src="sakshi_banner.jpg" alt="Sakshi Banner" width="100%"/>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/SYSTEM-ACTIVE%20OVERWATCH-red?style=for-the-badge&logo=powershell&logoColor=white" alt="Status"/>
   <img src="https://img.shields.io/badge/SECURITY-LEVEL%205-black?style=for-the-badge" alt="Clearance"/>
   <img src="https://img.shields.io/badge/PORTABILITY-ZERO%20DEPENDENCY-blue?style=for-the-badge" alt="Portability"/>
@@ -92,31 +96,59 @@ The primary behavioral interceptor. When triggered, it locks down focus:
 
 ---
 
-## ⚙️ Deployment & Clean Teardown
+## 🔧 Deployment & Shell Management Control
 
-Sakshi is fully portable. All paths are resolved dynamically at runtime using `$PSScriptRoot`.
+Sakshi is fully portable and operates directly via Windows Task Scheduler. Here are the configuration details and PowerShell/CMD commands to inspect, manage, and monitor the daemon:
 
-### 🚀 Installation
-1. Search for **PowerShell** in the Start Menu, right-click, and select **Run as Administrator**.
-2. Run the deployment script:
-   ```powershell
-   cd C:\Users\karan\Void\Sakshi
-   .\Install-Service.ps1
-   ```
-3. Enter a custom Scheduled Task name or press `Enter` to use the default **`Sakshi`**.
-4. Enter your personalized study quote (e.g. *"STUDY OR DIE."*). This quote will overwrite the default *"KEEP CALM..."* quote and appear on the confirmation button.
-5. The script stops existing instances, creates a Scheduled Task configured to run on Logon with highest privileges, overrides battery restrictions, and triggers the observer loop immediately.
+### 📥 1. Installation Inputs (`Install-Service.ps1`)
+When you launch the installer as Administrator, it will guide you through two configuration prompts:
+*   **Scheduled Task Name**: Assigns a custom name for the Windows scheduled service. *(Press `Enter` to use the default task name: `Sakshi`)*
+*   **Acknowledgment Quote**: Overwrites the default focus quote. The input string is automatically encoded in UTF-8 and saved to [Modules/Death/quote.txt](file:///C:/Users/karan/Void/Sakshi/Modules/Death/quote.txt) to be rendered on the final unlock button. *(Press `Enter` to use the default quote: `KEEP CALM AND STUDY HARD.`)*
 
-### 🧹 Uninstallation
-To completely stop the daemon and wipe its footprint from the system task list:
-1. Open **PowerShell** as **Administrator**.
-2. Run the cleanup script:
-   ```powershell
-   cd C:\Users\karan\Void\Sakshi
-   .\Uninstall-Service.ps1
-   ```
-3. Enter the scheduled task name to remove (press `Enter` to use **`Sakshi`**).
-4. The script will stop the background observer and unregister the task cleanly.
+### 📤 2. Uninstallation Inputs (`Uninstall-Service.ps1`)
+When removing the service, the script will request:
+*   **Task Name to Remove**: Specifies which task registry to stop and purge. *(Press `Enter` to target the default task: `Sakshi`)*
+
+---
+
+### 💻 3. Command Line Control (PowerShell & CMD)
+
+#### A. PowerShell Commands (Run as Administrator)
+*   **Get Current Status & Detail**:
+    ```powershell
+    Get-ScheduledTask -TaskName "Sakshi"
+    ```
+*   **Start the Observer Daemon**:
+    ```powershell
+    Start-ScheduledTask -TaskName "Sakshi"
+    ```
+*   **Stop the Running Daemon**:
+    ```powershell
+    Stop-ScheduledTask -TaskName "Sakshi"
+    ```
+*   **Enable/Disable the Task**:
+    ```powershell
+    Enable-ScheduledTask -TaskName "Sakshi"
+    Disable-ScheduledTask -TaskName "Sakshi"
+    ```
+
+#### B. Command Prompt / CMD Commands (Run as Administrator)
+*   **Query Task Status**:
+    ```cmd
+    schtasks /query /tn "Sakshi"
+    ```
+*   **Execute / Run Task**:
+    ```cmd
+    schtasks /run /tn "Sakshi"
+    ```
+*   **Terminate Task**:
+    ```cmd
+    schtasks /end /tn "Sakshi"
+    ```
+*   **Delete Task Manually**:
+    ```cmd
+    schtasks /delete /tn "Sakshi" /f
+    ```
 
 ---
 
