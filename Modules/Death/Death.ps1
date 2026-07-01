@@ -124,16 +124,19 @@ interface IMMDeviceEnumerator {
 [ComImport, Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
 class MMDeviceEnumeratorComObject { }
 
-public class AudioEngineV3 {
+public class AudioEngineV4 {
     [DllImport("user32.dll")]
     public static extern IntPtr GetForegroundWindow();
 
     [DllImport("user32.dll")]
     public static extern bool SetForegroundWindow(IntPtr hWnd);
 
+    [DllImport("winmm.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    public static extern bool PlaySound(byte[] pszSound, IntPtr hmod, uint fdwSound);
+
     private static IVirtualDesktopManager _desktopManager;
 
-    static AudioEngineV3() {
+    static AudioEngineV4() {
         try {
             Type type = Type.GetTypeFromCLSID(new Guid("AA509086-5CA9-4C25-8F95-589D3C07B48A"));
             _desktopManager = (IVirtualDesktopManager)Activator.CreateInstance(type);
@@ -195,12 +198,15 @@ public class AudioEngineV3 {
                 t += dt;
             }
 
-            using (var ms = new System.IO.MemoryStream(waveBuffer)) {
-                using (var player = new System.Media.SoundPlayer(ms)) {
-                    player.PlaySync();
-                }
-            }
+            // Play via native Win32 API (SND_MEMORY = 0x0004, SND_NODEFAULT = 0x0002)
+            PlaySound(waveBuffer, IntPtr.Zero, 6);
         } catch { }
+    }
+
+    public static void PlayBeepAsync(double frequency, int durationMs, double volume = 0.5) {
+        System.Threading.ThreadPool.QueueUserWorkItem(state => {
+            PlayBeep(frequency, durationMs, volume);
+        });
     }
 
     private static IAudioEndpointVolume Vol() {
@@ -308,11 +314,11 @@ public class AudioEngineV3 {
 "@
 
 try {
-    if (-not ([System.Management.Automation.PSTypeName]"AudioEngineV3").Type) {
+    if (-not ([System.Management.Automation.PSTypeName]"AudioEngineV4").Type) {
         Add-Type -TypeDefinition $AudioCode
     }
     $script:MyPid = [System.Diagnostics.Process]::GetCurrentProcess().Id
-    [AudioEngineV3]::MuteOtherSessions($true, $script:MyPid)
+    [AudioEngineV4]::MuteOtherSessions($true, $script:MyPid)
 } catch {
     Write-Log "AUDIO INTERFERENCE WARNING: Failed to control session mute states via WASAPI. Details: $_"
 }
@@ -450,7 +456,7 @@ try {
         if ($script:SecondsRemaining -gt 0 -and $null -ne $script:WindowHandle) {
             try {
                 # 1. Virtual Desktop Escape Prevention
-                $isOnCurrent = [AudioEngineV3]::IsOnCurrentDesktop($script:WindowHandle)
+                $isOnCurrent = [AudioEngineV4]::IsOnCurrentDesktop($script:WindowHandle)
                 if (-not $isOnCurrent) {
                     $Window.Hide()
                     $Window.Show()
@@ -462,9 +468,9 @@ try {
                 }
 
                 # 2. Foreground Window Focus Lock
-                $fg = [AudioEngineV3]::GetForegroundWindow()
+                $fg = [AudioEngineV4]::GetForegroundWindow()
                 if ($fg -ne $script:WindowHandle) {
-                    [AudioEngineV3]::SetForegroundWindow($script:WindowHandle) | Out-Null
+                    [AudioEngineV4]::SetForegroundWindow($script:WindowHandle) | Out-Null
                     $Window.Activate() | Out-Null
                     $Window.Focus() | Out-Null
                 }
@@ -480,7 +486,7 @@ try {
         $script:SecondsRemaining--
         
         try {
-            [AudioEngineV3]::MuteOtherSessions($true, $script:MyPid)
+            [AudioEngineV4]::MuteOtherSessions($true, $script:MyPid)
         } catch { }
         
         if ($script:SecondsRemaining -gt 0) {
@@ -490,9 +496,9 @@ try {
             # --- MECHANICAL TICK-TOCK ---
             # Alternates frequency every second for a realistic clock feel
             if ($script:SecondsRemaining % 2 -eq 0) {
-                [System.Threading.ThreadPool]::QueueUserWorkItem({ [AudioEngineV3]::PlayBeep(1800, 15) }) | Out-Null
+                [AudioEngineV4]::PlayBeepAsync(1800, 15)
             } else {
-                [System.Threading.ThreadPool]::QueueUserWorkItem({ [AudioEngineV3]::PlayBeep(1500, 15) }) | Out-Null
+                [AudioEngineV4]::PlayBeepAsync(1500, 15)
             }
         }
         else {
@@ -501,13 +507,11 @@ try {
             
             # --- SOUND EFFECT ON COMPLETION ---
             # Three-tone chime signaling unlock
-            [System.Threading.ThreadPool]::QueueUserWorkItem({
-                [AudioEngineV3]::PlayBeep(1000, 100)
-                Start-Sleep -Milliseconds 50
-                [AudioEngineV3]::PlayBeep(1200, 100)
-                Start-Sleep -Milliseconds 50
-                [AudioEngineV3]::PlayBeep(1500, 250)
-            }) | Out-Null
+            [AudioEngineV4]::PlayBeepAsync(1000, 100)
+            Start-Sleep -Milliseconds 150
+            [AudioEngineV4]::PlayBeepAsync(1200, 100)
+            Start-Sleep -Milliseconds 150
+            [AudioEngineV4]::PlayBeepAsync(1500, 250)
             
             $CountdownDisplay.Visibility = 'Collapsed'
             $AcceptButton.Visibility = 'Visible'
@@ -561,8 +565,8 @@ try {
             $ImageTimer.Stop()
             if ($MediaPlayer -and $BackgroundSoundPath) { $MediaPlayer.Stop(); $MediaPlayer.Close() }
             try {
-                [AudioEngineV3]::MuteOtherSessions($false, 0)
-                [AudioEngineV3]::Mute = $false
+                [AudioEngineV4]::MuteOtherSessions($false, 0)
+                [AudioEngineV4]::Mute = $false
             } catch { }
         }
     })
