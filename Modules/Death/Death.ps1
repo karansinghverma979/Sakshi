@@ -54,7 +54,7 @@ interface ISimpleAudioVolume {
     int GetMute(out bool pbMute);
 }
 
-[Guid("F4B1A599-7266-4319-A8EF-E78FA49B26DF"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+[Guid("F4B1A599-7266-4319-A8CA-E70ACB11E8CD"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 interface IAudioSessionControl {
     int GetState(out int pRetVal);
     int GetDisplayName(out IntPtr pRetVal);
@@ -67,7 +67,7 @@ interface IAudioSessionControl {
     int UnregisterAudioSessionEvents(IntPtr NewNotifications);
 }
 
-[Guid("BFB7AA03-7D1D-4497-85E2-E83ABB227F6B"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+[Guid("bfb7ff88-7239-4fc9-8fa2-07c950be9c6d"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 interface IAudioSessionControl2 {
     int GetState(out int pRetVal);
     int GetDisplayName(out IntPtr pRetVal);
