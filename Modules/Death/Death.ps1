@@ -124,7 +124,7 @@ interface IMMDeviceEnumerator {
 [ComImport, Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
 class MMDeviceEnumeratorComObject { }
 
-public class AudioEngine {
+public class AudioEngineV3 {
     [DllImport("user32.dll")]
     public static extern IntPtr GetForegroundWindow();
 
@@ -133,7 +133,7 @@ public class AudioEngine {
 
     private static IVirtualDesktopManager _desktopManager;
 
-    static AudioEngine() {
+    static AudioEngineV3() {
         try {
             Type type = Type.GetTypeFromCLSID(new Guid("AA509086-5CA9-4C25-8F95-589D3C07B48A"));
             _desktopManager = (IVirtualDesktopManager)Activator.CreateInstance(type);
@@ -150,6 +150,57 @@ public class AudioEngine {
             if (hr == 0) return onCurrent;
         } catch { }
         return true;
+    }
+
+    public static void PlayBeep(double frequency, int durationMs, double volume = 0.5) {
+        try {
+            int sampleRate = 44100;
+            int numSamples = (int)(sampleRate * (durationMs / 1000.0));
+            byte[] waveBuffer = new byte[44 + numSamples * 2];
+
+            // RIFF Header
+            Buffer.BlockCopy(System.Text.Encoding.ASCII.GetBytes("RIFF"), 0, waveBuffer, 0, 4);
+            int fileSize = 36 + numSamples * 2;
+            Buffer.BlockCopy(BitConverter.GetBytes(fileSize), 0, waveBuffer, 4, 4);
+            Buffer.BlockCopy(System.Text.Encoding.ASCII.GetBytes("WAVE"), 0, waveBuffer, 8, 4);
+
+            // Subchunk 1 (fmt)
+            Buffer.BlockCopy(System.Text.Encoding.ASCII.GetBytes("fmt "), 0, waveBuffer, 12, 4);
+            int subchunk1Size = 16;
+            Buffer.BlockCopy(BitConverter.GetBytes(subchunk1Size), 0, waveBuffer, 16, 4);
+            short audioFormat = 1; // PCM
+            Buffer.BlockCopy(BitConverter.GetBytes(audioFormat), 0, waveBuffer, 20, 2);
+            short numChannels = 1; // Mono
+            Buffer.BlockCopy(BitConverter.GetBytes(numChannels), 0, waveBuffer, 22, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(sampleRate), 0, waveBuffer, 24, 4);
+            int byteRate = sampleRate * 2;
+            Buffer.BlockCopy(BitConverter.GetBytes(byteRate), 0, waveBuffer, 28, 4);
+            short blockAlign = 2;
+            Buffer.BlockCopy(BitConverter.GetBytes(blockAlign), 0, waveBuffer, 32, 2);
+            short bitsPerSample = 16;
+            Buffer.BlockCopy(BitConverter.GetBytes(bitsPerSample), 0, waveBuffer, 34, 2);
+
+            // Subchunk 2 (data)
+            Buffer.BlockCopy(System.Text.Encoding.ASCII.GetBytes("data"), 0, waveBuffer, 36, 4);
+            int subchunk2Size = numSamples * 2;
+            Buffer.BlockCopy(BitConverter.GetBytes(subchunk2Size), 0, waveBuffer, 40, 4);
+
+            // Generate Sine Wave Samples
+            double t = 0.0;
+            double dt = 2.0 * Math.PI * frequency / sampleRate;
+            double amplitude = 32767 * volume;
+            for (int i = 0; i < numSamples; i++) {
+                short sample = (short)(amplitude * Math.Sin(t));
+                Buffer.BlockCopy(BitConverter.GetBytes(sample), 0, waveBuffer, 44 + i * 2, 2);
+                t += dt;
+            }
+
+            using (var ms = new System.IO.MemoryStream(waveBuffer)) {
+                using (var player = new System.Media.SoundPlayer(ms)) {
+                    player.PlaySync();
+                }
+            }
+        } catch { }
     }
 
     private static IAudioEndpointVolume Vol() {
@@ -257,11 +308,11 @@ public class AudioEngine {
 "@
 
 try {
-    if (-not ([System.Management.Automation.PSTypeName]"AudioEngine").Type) {
+    if (-not ([System.Management.Automation.PSTypeName]"AudioEngineV3").Type) {
         Add-Type -TypeDefinition $AudioCode
     }
     $script:MyPid = [System.Diagnostics.Process]::GetCurrentProcess().Id
-    [AudioEngine]::MuteOtherSessions($true, $script:MyPid)
+    [AudioEngineV3]::MuteOtherSessions($true, $script:MyPid)
 } catch {
     Write-Log "AUDIO INTERFERENCE WARNING: Failed to control session mute states via WASAPI. Details: $_"
 }
@@ -399,10 +450,11 @@ try {
         if ($script:SecondsRemaining -gt 0 -and $null -ne $script:WindowHandle) {
             try {
                 # 1. Virtual Desktop Escape Prevention
-                $isOnCurrent = [AudioEngine]::IsOnCurrentDesktop($script:WindowHandle)
+                $isOnCurrent = [AudioEngineV3]::IsOnCurrentDesktop($script:WindowHandle)
                 if (-not $isOnCurrent) {
                     $Window.Hide()
                     $Window.Show()
+                    $script:WindowHandle = (New-Object System.Windows.Interop.WindowInteropHelper($Window)).Handle
                     $Window.Topmost = $false
                     $Window.Topmost = $true
                     $Window.Activate() | Out-Null
@@ -410,9 +462,9 @@ try {
                 }
 
                 # 2. Foreground Window Focus Lock
-                $fg = [AudioEngine]::GetForegroundWindow()
+                $fg = [AudioEngineV3]::GetForegroundWindow()
                 if ($fg -ne $script:WindowHandle) {
-                    [AudioEngine]::SetForegroundWindow($script:WindowHandle) | Out-Null
+                    [AudioEngineV3]::SetForegroundWindow($script:WindowHandle) | Out-Null
                     $Window.Activate() | Out-Null
                     $Window.Focus() | Out-Null
                 }
@@ -428,7 +480,7 @@ try {
         $script:SecondsRemaining--
         
         try {
-            [AudioEngine]::MuteOtherSessions($true, $script:MyPid)
+            [AudioEngineV3]::MuteOtherSessions($true, $script:MyPid)
         } catch { }
         
         if ($script:SecondsRemaining -gt 0) {
@@ -438,9 +490,9 @@ try {
             # --- MECHANICAL TICK-TOCK ---
             # Alternates frequency every second for a realistic clock feel
             if ($script:SecondsRemaining % 2 -eq 0) {
-                [System.Console]::Beep(1800, 15) # High sharp Tick
+                [System.Threading.ThreadPool]::QueueUserWorkItem({ [AudioEngineV3]::PlayBeep(1800, 15) }) | Out-Null
             } else {
-                [System.Console]::Beep(1500, 15) # Slightly lower Tock
+                [System.Threading.ThreadPool]::QueueUserWorkItem({ [AudioEngineV3]::PlayBeep(1500, 15) }) | Out-Null
             }
         }
         else {
@@ -449,11 +501,13 @@ try {
             
             # --- SOUND EFFECT ON COMPLETION ---
             # Three-tone chime signaling unlock
-            [System.Console]::Beep(1000, 100)
-            Start-Sleep -Milliseconds 50
-            [System.Console]::Beep(1200, 100)
-            Start-Sleep -Milliseconds 50
-            [System.Console]::Beep(1500, 250)
+            [System.Threading.ThreadPool]::QueueUserWorkItem({
+                [AudioEngineV3]::PlayBeep(1000, 100)
+                Start-Sleep -Milliseconds 50
+                [AudioEngineV3]::PlayBeep(1200, 100)
+                Start-Sleep -Milliseconds 50
+                [AudioEngineV3]::PlayBeep(1500, 250)
+            }) | Out-Null
             
             $CountdownDisplay.Visibility = 'Collapsed'
             $AcceptButton.Visibility = 'Visible'
@@ -507,12 +561,15 @@ try {
             $ImageTimer.Stop()
             if ($MediaPlayer -and $BackgroundSoundPath) { $MediaPlayer.Stop(); $MediaPlayer.Close() }
             try {
-                [AudioEngine]::MuteOtherSessions($false, 0)
-                [AudioEngine]::Mute = $false
+                [AudioEngineV3]::MuteOtherSessions($false, 0)
+                [AudioEngineV3]::Mute = $false
             } catch { }
         }
     })
 
-    $Window.ShowDialog() | Out-Null
+    $Window.Show()
+    $frame = New-Object System.Windows.Threading.DispatcherFrame
+    $Window.Add_Closed({ $frame.Continue = $false })
+    [System.Windows.Threading.Dispatcher]::PushFrame($frame)
 } catch { Write-Log "FATAL ERROR: $_" }
 #endregion
