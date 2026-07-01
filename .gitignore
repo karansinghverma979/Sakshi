@@ -23,3 +23,6 @@ Desktop.ini
 
 # Local custom quote configuration
 Modules/Death/quote.txt
+
+# Local custom visual files
+Modules/Death/Visuals/
