@@ -116,6 +116,12 @@ interface IMMDeviceEnumerator {
 class MMDeviceEnumeratorComObject { }
 
 public class Audio {
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetForegroundWindow();
+
+    [DllImport("user32.dll")]
+    public static extern bool SetForegroundWindow(IntPtr hWnd);
+
     private static IAudioEndpointVolume Vol() {
         var enumerator = new MMDeviceEnumeratorComObject() as IMMDeviceEnumerator;
         IMMDevice dev = null;
@@ -167,11 +173,20 @@ public class Audio {
                         if (session2 != null) {
                             uint pid = 0;
                             session2.GetProcessId(out pid);
-                            if (pid != myPid) {
+                            
+                            // If mute is true: only mute other processes.
+                            // If mute is false: unmute EVERYTHING unconditionally.
+                            if (!mute || pid != myPid) {
                                 var simpleVolume = session as ISimpleAudioVolume;
                                 if (simpleVolume != null) {
                                     simpleVolume.SetMute(mute, Guid.Empty);
                                 }
+                            }
+                        } else if (!mute) {
+                            // Unmute system sounds / other sessions without session2 control
+                            var simpleVolume = session as ISimpleAudioVolume;
+                            if (simpleVolume != null) {
+                                simpleVolume.SetMute(false, Guid.Empty);
                             }
                         }
                         Marshal.ReleaseComObject(session);
@@ -235,6 +250,7 @@ $Xaml = @"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MEMENTO MORI"
         WindowState="Maximized" WindowStyle="None" Topmost="True"
+        ShowInTaskbar="False" ResizeMode="NoResize"
         Background="Black">
 
     <Window.Resources>
@@ -328,6 +344,13 @@ try {
         
         try {
             [Audio]::MuteOtherSessions($true, $script:MyPid)
+
+            if ($script:SecondsRemaining -gt 0 -and $null -ne $script:WindowHandle) {
+                $fg = [Audio]::GetForegroundWindow()
+                if ($fg -ne $script:WindowHandle) {
+                    [Audio]::SetForegroundWindow($script:WindowHandle) | Out-Null
+                }
+            }
         } catch { }
         
         if ($script:SecondsRemaining -gt 0) {
@@ -344,7 +367,15 @@ try {
         }
         else {
             $CountdownTimer.Stop()
-            [System.Console]::Beep(1200, 100) # Final deeper thud
+            
+            # --- SOUND EFFECT ON COMPLETION ---
+            # Three-tone chime signaling unlock
+            [System.Console]::Beep(1000, 100)
+            Start-Sleep -Milliseconds 50
+            [System.Console]::Beep(1200, 100)
+            Start-Sleep -Milliseconds 50
+            [System.Console]::Beep(1500, 250)
+            
             $CountdownDisplay.Visibility = 'Collapsed'
             $AcceptButton.Visibility = 'Visible'
             $Window.Resources["ButtonPulseAnimation"].Begin($Window)
@@ -361,10 +392,24 @@ try {
     })
 
     $AcceptButton.Add_Click({ $Window.Close() })
+
+    # Prevent losing focus, switching desktops, or clicking system tray
+    $Window.Add_Deactivated({
+        if ($script:SecondsRemaining -gt 0) {
+            $Window.Topmost = $false
+            $Window.Topmost = $true
+            $Window.Activate() | Out-Null
+            $Window.Focus() | Out-Null
+        }
+    })
     
     $Window.Add_Loaded({
+        $script:WindowHandle = (New-Object System.Windows.Interop.WindowInteropHelper($Window)).Handle
         $CountdownTimer.Start()
         $ImageTimer.Start()
+        $Window.Topmost = $true
+        $Window.Activate() | Out-Null
+        $Window.Focus() | Out-Null
         $Window.Resources["HeaderPulseAnimation"].Begin($Window)
         if ($MediaPlayer -and $BackgroundSoundPath) { 
             $MediaPlayer.Play()
@@ -381,7 +426,8 @@ try {
             $ImageTimer.Stop()
             if ($MediaPlayer -and $BackgroundSoundPath) { $MediaPlayer.Stop(); $MediaPlayer.Close() }
             try {
-                [Audio]::MuteOtherSessions($false, $script:MyPid)
+                [Audio]::MuteOtherSessions($false, 0)
+                [Audio]::Mute = $false
             } catch { }
         }
     })
