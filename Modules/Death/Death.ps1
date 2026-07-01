@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Memento Mori - Absolute Finality (Mechanical Clock Edition V5)
+    Memento Mori - Absolute Finality (Mechanical Clock Edition V6)
 .DESCRIPTION
     Features a realistic alternating Tick-Tock sound, virtual desktop lock, and a perfectly stable UI.
 #>
@@ -36,96 +36,118 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-[Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IAudioEndpointVolumeV5 {
-    int f(); int g(); int h(); int i();
-    int SetMasterVolumeLevelScalar(float fLevel, Guid pguidEventContext);
-    int j();
-    int GetMasterVolumeLevelScalar(out float pfLevel);
-    int k(); int l(); int m(); int n();
-    int SetMute([MarshalAs(UnmanagedType.Bool)] bool bMute, Guid pguidEventContext);
-    int GetMute(out bool pbMute);
+[ComImport]
+[Guid("5CDF2C82-841E-4546-9722-0CF74078229A")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IAudioEndpointVolumeV6 {
+    [PreserveSig] int f();
+    [PreserveSig] int g();
+    [PreserveSig] int h();
+    [PreserveSig] int i();
+    [PreserveSig] int SetMasterVolumeLevelScalar(float fLevel, Guid pguidEventContext);
+    [PreserveSig] int j();
+    [PreserveSig] int GetMasterVolumeLevelScalar(out float pfLevel);
+    [PreserveSig] int k();
+    [PreserveSig] int l();
+    [PreserveSig] int m();
+    [PreserveSig] int n();
+    [PreserveSig] int SetMute([MarshalAs(UnmanagedType.Bool)] bool bMute, Guid pguidEventContext);
+    [PreserveSig] int GetMute(out bool pbMute);
 }
 
-[Guid("87CE5498-68D6-44E5-9215-6DA47EF883D8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface ISimpleAudioVolumeV5 {
-    int SetMasterVolume(float fLevel, Guid pguidEventContext);
-    int GetMasterVolume(out float pfLevel);
-    int SetMute([MarshalAs(UnmanagedType.Bool)] bool bMute, Guid pguidEventContext);
-    int GetMute(out bool pbMute);
+[ComImport]
+[Guid("87CE5498-68D6-44E5-9215-6DA47EF883D8")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface ISimpleAudioVolumeV6 {
+    [PreserveSig] int SetMasterVolume(float fLevel, Guid pguidEventContext);
+    [PreserveSig] int GetMasterVolume(out float pfLevel);
+    [PreserveSig] int SetMute([MarshalAs(UnmanagedType.Bool)] bool bMute, Guid pguidEventContext);
+    [PreserveSig] int GetMute(out bool pbMute);
 }
 
-[Guid("F4B1A599-7266-4319-A8CA-E70ACB11E8CD"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IAudioSessionControlV5 {
-    int GetState(out int pRetVal);
-    int GetDisplayName(out IntPtr pRetVal);
-    int SetDisplayName([MarshalAs(UnmanagedType.LPWStr)] string Value, Guid EventContext);
-    int GetIconPath(out IntPtr pRetVal);
-    int SetIconPath([MarshalAs(UnmanagedType.LPWStr)] string Value, Guid EventContext);
-    int GetGroupingParam(out Guid pRetVal);
-    int SetGroupingParam(Guid Override, Guid EventContext);
-    int RegisterAudioSessionEvents(IntPtr NewNotifications);
-    int UnregisterAudioSessionEvents(IntPtr NewNotifications);
+[ComImport]
+[Guid("F4B1A599-7266-4319-A8CA-E70ACB11E8CD")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IAudioSessionControlV6 {
+    [PreserveSig] int GetState(out int pRetVal);
+    [PreserveSig] int GetDisplayName(out IntPtr pRetVal);
+    [PreserveSig] int SetDisplayName([MarshalAs(UnmanagedType.LPWStr)] string Value, Guid EventContext);
+    [PreserveSig] int GetIconPath(out IntPtr pRetVal);
+    [PreserveSig] int SetIconPath([MarshalAs(UnmanagedType.LPWStr)] string Value, Guid EventContext);
+    [PreserveSig] int GetGroupingParam(out Guid pRetVal);
+    [PreserveSig] int SetGroupingParam(Guid Override, Guid EventContext);
+    [PreserveSig] int RegisterAudioSessionEvents(IntPtr NewNotifications);
+    [PreserveSig] int UnregisterAudioSessionEvents(IntPtr NewNotifications);
 }
 
-[Guid("bfb7ff88-7239-4fc9-8fa2-07c950be9c6d"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IAudioSessionControl2V5 {
-    int GetState(out int pRetVal);
-    int GetDisplayName(out IntPtr pRetVal);
-    int SetDisplayName([MarshalAs(UnmanagedType.LPWStr)] string Value, Guid EventContext);
-    int GetIconPath(out IntPtr pRetVal);
-    int SetIconPath([MarshalAs(UnmanagedType.LPWStr)] string Value, Guid EventContext);
-    int GetGroupingParam(out Guid pRetVal);
-    int SetGroupingParam(Guid Override, Guid EventContext);
-    int RegisterAudioSessionEvents(IntPtr NewNotifications);
-    int UnregisterAudioSessionEvents(IntPtr NewNotifications);
-    int GetSessionIdentifier(out IntPtr pRetVal);
-    int GetSessionInstanceIdentifier(out IntPtr pRetVal);
-    int GetProcessId(out uint pRetVal);
-    int IsSystemSoundsSession();
+[ComImport]
+[Guid("bfb7ff88-7239-4fc9-8fa2-07c950be9c6d")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IAudioSessionControl2V6 {
+    [PreserveSig] int GetState(out int pRetVal);
+    [PreserveSig] int GetDisplayName(out IntPtr pRetVal);
+    [PreserveSig] int SetDisplayName([MarshalAs(UnmanagedType.LPWStr)] string Value, Guid EventContext);
+    [PreserveSig] int GetIconPath(out IntPtr pRetVal);
+    [PreserveSig] int SetIconPath([MarshalAs(UnmanagedType.LPWStr)] string Value, Guid EventContext);
+    [PreserveSig] int GetGroupingParam(out Guid pRetVal);
+    [PreserveSig] int SetGroupingParam(Guid Override, Guid EventContext);
+    [PreserveSig] int RegisterAudioSessionEvents(IntPtr NewNotifications);
+    [PreserveSig] int UnregisterAudioSessionEvents(IntPtr NewNotifications);
+    [PreserveSig] int GetSessionIdentifier(out IntPtr pRetVal);
+    [PreserveSig] int GetSessionInstanceIdentifier(out IntPtr pRetVal);
+    [PreserveSig] int GetProcessId(out uint pRetVal);
+    [PreserveSig] int IsSystemSoundsSession();
 }
 
-[Guid("E2F5BB11-0570-40CA-ACDD-3AA01277DEE8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IAudioSessionEnumeratorV5 {
-    int GetCount(out int SessionCount);
-    int GetSession(int SessionIndex, out IAudioSessionControlV5 Session);
+[ComImport]
+[Guid("E2F5BB11-0570-40CA-ACDD-3AA01277DEE8")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IAudioSessionEnumeratorV6 {
+    [PreserveSig] int GetCount(out int SessionCount);
+    [PreserveSig] int GetSession(int SessionIndex, out IAudioSessionControlV6 Session);
 }
 
-[Guid("77AA99A0-1BD6-484F-8BC7-2C654C9A9B6F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IAudioSessionManager2V5 {
-    int GetAudioSessionControl(Guid AudioSessionGuid, uint StreamFlags, out IntPtr SessionControl);
-    int GetSimpleAudioVolume(Guid AudioSessionGuid, uint StreamFlags, out IntPtr AudioVolume);
-    int GetSessionEnumerator(out IAudioSessionEnumeratorV5 SessionList);
-    int RegisterSessionNotification(IntPtr SessionNotification);
-    int UnregisterSessionNotification(IntPtr SessionNotification);
-    int RegisterDuckNotification([MarshalAs(UnmanagedType.LPWStr)] string sessionID, IntPtr duckNotification);
-    int UnregisterDuckNotification(IntPtr duckNotification);
+[ComImport]
+[Guid("77AA99A0-1BD6-484F-8BC7-2C654C9A9B6F")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IAudioSessionManager2V6 {
+    [PreserveSig] int GetAudioSessionControl(Guid AudioSessionGuid, uint StreamFlags, out IntPtr SessionControl);
+    [PreserveSig] int GetSimpleAudioVolume(Guid AudioSessionGuid, uint StreamFlags, out IntPtr AudioVolume);
+    [PreserveSig] int GetSessionEnumerator(out IAudioSessionEnumeratorV6 SessionList);
+    [PreserveSig] int RegisterSessionNotification(IntPtr SessionNotification);
+    [PreserveSig] int UnregisterSessionNotification(IntPtr SessionNotification);
+    [PreserveSig] int RegisterDuckNotification([MarshalAs(UnmanagedType.LPWStr)] string sessionID, IntPtr duckNotification);
+    [PreserveSig] int UnregisterDuckNotification(IntPtr duckNotification);
 }
 
 [ComImport]
 [Guid("a5cd92ff-29be-454c-8d04-d82879fb3f1b")]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IVirtualDesktopManagerV5 {
-    int IsWindowOnCurrentVirtualDesktop(IntPtr topLevelWindow, [MarshalAs(UnmanagedType.Bool)] out bool onCurrentDesktop);
-    int GetWindowDesktopId(IntPtr topLevelWindow, out Guid desktopId);
-    int MoveWindowToDesktop(IntPtr topLevelWindow, ref Guid desktopId);
+interface IVirtualDesktopManagerV6 {
+    [PreserveSig] int IsWindowOnCurrentVirtualDesktop(IntPtr topLevelWindow, [MarshalAs(UnmanagedType.Bool)] out bool onCurrentDesktop);
+    [PreserveSig] int GetWindowDesktopId(IntPtr topLevelWindow, out Guid desktopId);
+    [PreserveSig] int MoveWindowToDesktop(IntPtr topLevelWindow, ref Guid desktopId);
 }
 
-[Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IMMDeviceV5 {
-    int Activate(ref Guid id, int clsCtx, int activationParams, [MarshalAs(UnmanagedType.IUnknown)] out object obj);
+[ComImport]
+[Guid("D666063F-1587-4E43-81F1-B948E807363F")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IMMDeviceV6 {
+    [PreserveSig] int Activate(ref Guid id, int clsCtx, int activationParams, [MarshalAs(UnmanagedType.IUnknown)] out object obj);
 }
 
-[Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IMMDeviceEnumeratorV5 {
-    int f();
-    int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDeviceV5 endpoint);
+[ComImport]
+[Guid("A95664D2-9614-4F35-A746-DE8DB63617E6")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IMMDeviceEnumeratorV6 {
+    [PreserveSig] int f();
+    [PreserveSig] int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDeviceV6 endpoint);
 }
 
 [ComImport, Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
-class MMDeviceEnumeratorComObjectV5 { }
+class MMDeviceEnumeratorComObjectV6 { }
 
-public class AudioEngineV5 {
+public class AudioEngineV6 {
     [DllImport("user32.dll")]
     public static extern IntPtr GetForegroundWindow();
 
@@ -135,12 +157,12 @@ public class AudioEngineV5 {
     [DllImport("winmm.dll", SetLastError = true, CharSet = CharSet.Auto)]
     public static extern bool PlaySound(byte[] pszSound, IntPtr hmod, uint fdwSound);
 
-    private static IVirtualDesktopManagerV5 _desktopManager;
+    private static IVirtualDesktopManagerV6 _desktopManager;
 
-    static AudioEngineV5() {
+    static AudioEngineV6() {
         try {
             Type type = Type.GetTypeFromCLSID(new Guid("AA509086-5CA9-4C25-8F95-589D3C07B48A"));
-            _desktopManager = (IVirtualDesktopManagerV5)Activator.CreateInstance(type);
+            _desktopManager = (IVirtualDesktopManagerV6)Activator.CreateInstance(type);
         } catch {
             _desktopManager = null;
         }
@@ -217,14 +239,14 @@ public class AudioEngineV5 {
         });
     }
 
-    private static IAudioEndpointVolumeV5 Vol() {
-        var enumerator = new MMDeviceEnumeratorComObjectV5() as IMMDeviceEnumeratorV5;
-        IMMDeviceV5 dev = null;
+    private static IAudioEndpointVolumeV6 Vol() {
+        var enumerator = new MMDeviceEnumeratorComObjectV6() as IMMDeviceEnumeratorV6;
+        IMMDeviceV6 dev = null;
         Marshal.ThrowExceptionForHR(enumerator.GetDefaultAudioEndpoint(0, 1, out dev));
         object obj = null;
-        var epvid = typeof(IAudioEndpointVolumeV5).GUID;
+        var epvid = typeof(IAudioEndpointVolumeV6).GUID;
         Marshal.ThrowExceptionForHR(dev.Activate(ref epvid, 23, 0, out obj));
-        return obj as IAudioEndpointVolumeV5;
+        return obj as IAudioEndpointVolumeV6;
     }
 
     public static bool Mute {
@@ -252,9 +274,9 @@ public class AudioEngineV5 {
 
     public static void MuteOtherSessions(bool mute, uint myPid) {
         try {
-            var enumerator = new MMDeviceEnumeratorComObjectV5() as IMMDeviceEnumeratorV5;
+            var enumerator = new MMDeviceEnumeratorComObjectV6() as IMMDeviceEnumeratorV6;
             if (enumerator == null) return;
-            IMMDeviceV5 dev = null;
+            IMMDeviceV6 dev = null;
             if (enumerator.GetDefaultAudioEndpoint(0, 1, out dev) != 0 || dev == null) return;
             
             object obj = null;
@@ -264,13 +286,13 @@ public class AudioEngineV5 {
                 return;
             }
             
-            var manager = obj as IAudioSessionManager2V5;
+            var manager = obj as IAudioSessionManager2V6;
             if (manager == null) {
                 Marshal.ReleaseComObject(dev);
                 return;
             }
             
-            IAudioSessionEnumeratorV5 sessionEnum = null;
+            IAudioSessionEnumeratorV6 sessionEnum = null;
             if (manager.GetSessionEnumerator(out sessionEnum) != 0 || sessionEnum == null) {
                 Marshal.ReleaseComObject(manager);
                 Marshal.ReleaseComObject(dev);
@@ -280,9 +302,9 @@ public class AudioEngineV5 {
             int count = 0;
             if (sessionEnum.GetCount(out count) == 0 && count > 0) {
                 for (int i = 0; i < count; i++) {
-                    IAudioSessionControlV5 session = null;
+                    IAudioSessionControlV6 session = null;
                     if (sessionEnum.GetSession(i, out session) == 0 && session != null) {
-                        var session2 = session as IAudioSessionControl2V5;
+                        var session2 = session as IAudioSessionControl2V6;
                         if (session2 != null) {
                             // Check if it is the system sounds session (HR = 0 means true)
                             if (session2.IsSystemSoundsSession() == 0) {
@@ -296,14 +318,14 @@ public class AudioEngineV5 {
                             // If mute is true: only mute other non-exempt processes.
                             // If mute is false: unmute EVERYTHING unconditionally.
                             if (!mute || !IsExempt(pid, myPid)) {
-                                var simpleVolume = session as ISimpleAudioVolumeV5;
+                                var simpleVolume = session as ISimpleAudioVolumeV6;
                                 if (simpleVolume != null) {
                                     simpleVolume.SetMute(mute, Guid.Empty);
                                 }
                             }
                         } else if (!mute) {
                             // Unmute system sounds / other sessions without session2 control
-                            var simpleVolume = session as ISimpleAudioVolumeV5;
+                            var simpleVolume = session as ISimpleAudioVolumeV6;
                             if (simpleVolume != null) {
                                 simpleVolume.SetMute(false, Guid.Empty);
                             }
@@ -321,11 +343,11 @@ public class AudioEngineV5 {
 "@
 
 try {
-    if (-not ([System.Management.Automation.PSTypeName]"AudioEngineV5").Type) {
+    if (-not ([System.Management.Automation.PSTypeName]"AudioEngineV6").Type) {
         Add-Type -TypeDefinition $AudioCode
     }
     $script:MyPid = [System.Diagnostics.Process]::GetCurrentProcess().Id
-    [AudioEngineV5]::MuteOtherSessions($true, $script:MyPid)
+    [AudioEngineV6]::MuteOtherSessions($true, $script:MyPid)
 } catch {
     Write-Log "AUDIO INTERFERENCE WARNING: Failed to control session mute states via WASAPI. Details: $_"
 }
@@ -462,19 +484,19 @@ try {
         if ($script:SecondsRemaining -gt 0 -and $null -ne $script:WindowHandle) {
             try {
                 # 1. Active Virtual Desktop Snap
-                $isOnCurrent = [AudioEngineV5]::IsOnCurrentDesktop($script:WindowHandle)
+                $isOnCurrent = [AudioEngineV6]::IsOnCurrentDesktop($script:WindowHandle)
                 if (-not $isOnCurrent) {
                     $Bytes = (Get-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VirtualDesktops' -ErrorAction SilentlyContinue).CurrentVirtualDesktop
                     if ($null -ne $Bytes) {
                         $CurrentDesktopGuid = [Guid]::new($Bytes)
-                        [AudioEngineV5]::MoveToDesktop($script:WindowHandle, $CurrentDesktopGuid)
+                        [AudioEngineV6]::MoveToDesktop($script:WindowHandle, $CurrentDesktopGuid)
                     }
                 }
 
                 # 2. Foreground Focus Lock
-                $fg = [AudioEngineV5]::GetForegroundWindow()
+                $fg = [AudioEngineV6]::GetForegroundWindow()
                 if ($fg -ne $script:WindowHandle) {
-                    [AudioEngineV5]::SetForegroundWindow($script:WindowHandle) | Out-Null
+                    [AudioEngineV6]::SetForegroundWindow($script:WindowHandle) | Out-Null
                     $Window.Topmost = $false
                     $Window.Topmost = $true
                     $Window.Activate() | Out-Null
@@ -492,7 +514,7 @@ try {
         $script:SecondsRemaining--
         
         try {
-            [AudioEngineV5]::MuteOtherSessions($true, $script:MyPid)
+            [AudioEngineV6]::MuteOtherSessions($true, $script:MyPid)
         } catch { }
         
         if ($script:SecondsRemaining -gt 0) {
@@ -502,9 +524,9 @@ try {
             # --- MECHANICAL TICK-TOCK ---
             # Alternates frequency every second for a realistic clock feel
             if ($script:SecondsRemaining % 2 -eq 0) {
-                [AudioEngineV5]::PlayBeepAsync(1800, 15)
+                [AudioEngineV6]::PlayBeepAsync(1800, 15)
             } else {
-                [AudioEngineV5]::PlayBeepAsync(1500, 15)
+                [AudioEngineV6]::PlayBeepAsync(1500, 15)
             }
         }
         else {
@@ -513,11 +535,11 @@ try {
             
             # --- SOUND EFFECT ON COMPLETION ---
             # Three-tone chime signaling unlock
-            [AudioEngineV5]::PlayBeepAsync(1000, 100)
+            [AudioEngineV6]::PlayBeepAsync(1000, 100)
             Start-Sleep -Milliseconds 150
-            [AudioEngineV5]::PlayBeepAsync(1200, 100)
+            [AudioEngineV6]::PlayBeepAsync(1200, 100)
             Start-Sleep -Milliseconds 150
-            [AudioEngineV5]::PlayBeepAsync(1500, 250)
+            [AudioEngineV6]::PlayBeepAsync(1500, 250)
             
             $CountdownDisplay.Visibility = 'Collapsed'
             $AcceptButton.Visibility = 'Visible'
@@ -571,8 +593,8 @@ try {
             $ImageTimer.Stop()
             if ($MediaPlayer -and $BackgroundSoundPath) { $MediaPlayer.Stop(); $MediaPlayer.Close() }
             try {
-                [AudioEngineV5]::MuteOtherSessions($false, 0)
-                [AudioEngineV5]::Mute = $false
+                [AudioEngineV6]::MuteOtherSessions($false, 0)
+                [AudioEngineV6]::Mute = $false
             } catch { }
         }
     })
