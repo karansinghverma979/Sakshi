@@ -1,4 +1,9 @@
-# <p align="center"><span style="color:#FF3333">👁️ SAKSHI // THE WITNESS v3.0</span></p>
+
+</strong>
+# <strong><a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Impact&weight=900&size=50&duration=2500&pause=500&color=FF4500&center=true&vCenter=true&width=800&height=80&lines=☠️+MEMENTO+MORI+☠️;⌚+REMEMBER+THAT+YOU+MUST+DIE+⌚;⌛+YOUR+DAYS+ARE+NUMBERED+⌛" alt="Memento Mori" /></a></strong>
+
+<br><br>
+
 
 <p align="center">
   <img src="sakshi_banner.jpg" alt="Sakshi Banner" width="100%"/>
@@ -174,3 +179,5 @@ git push -u origin main
 
 *   **Architect:** Karan Singh Verma
 *   **System Version:** 3.0.0 (Production Build)
+
+  
