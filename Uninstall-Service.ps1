@@ -23,7 +23,15 @@ try {
     if (Get-ScheduledTask -TaskName $NewTaskName -ErrorAction SilentlyContinue) {
         # Stop task if running
         Stop-ScheduledTask -TaskName $NewTaskName -ErrorAction SilentlyContinue
-        Write-Host " [STOPPED] Active daemon stopped." -ForegroundColor Yellow
+        Write-Host " [STOPPED] Active daemon task stopped." -ForegroundColor Yellow
+
+        # Terminate any running process instances
+        Write-Host " [CLEANUP] Stopping running background instances..." -ForegroundColor Yellow
+        Get-CimInstance Win32_Process -Filter "Name = 'powershell.exe'" -ErrorAction SilentlyContinue | Where-Object {
+            $_.CommandLine -like "*Sakshi.ps1*" -or $_.CommandLine -like "*Death.ps1*"
+        } | ForEach-Object {
+            Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue
+        }
 
         # Unregister task
         Unregister-ScheduledTask -TaskName $NewTaskName -Confirm:$false

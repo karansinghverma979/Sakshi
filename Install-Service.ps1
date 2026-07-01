@@ -10,20 +10,48 @@ if (-not $IsAdmin) {
     Exit
 }
 
-# 2. PROMPT FOR TASK NAME
+# 2. PROMPT FOR CONFIGURATION
 $DefaultTaskName = "Sakshi"
+$DefaultQuote = "KEEP CALM AND STUDY HARD."
+
 Write-Host "--- SAKSHI DEPLOYMENT INTERFACE ---" -ForegroundColor Cyan
 $NewTaskName = Read-Host "Enter Scheduled Task Name [Default: $DefaultTaskName]"
 if ([string]::IsNullOrWhiteSpace($NewTaskName)) {
     $NewTaskName = $DefaultTaskName
 }
 
-# 3. SET RELATIVE PATHS
+$CustomQuoteInput = Read-Host "Enter acknowledgment button quote [Default: $DefaultQuote]"
+if ([string]::IsNullOrWhiteSpace($CustomQuoteInput)) {
+    $CustomQuoteInput = $DefaultQuote
+}
+
+# 3. SET RELATIVE PATHS AND WRITE CONFIG
 $BrainPath = Join-Path $PSScriptRoot "Sakshi.ps1"
+$QuoteDir = Join-Path $PSScriptRoot "Modules\Death"
+$QuotePath = Join-Path $QuoteDir "quote.txt"
+
+# Write custom quote to file
+try {
+    if (-not (Test-Path $QuoteDir)) {
+        New-Item -ItemType Directory -Path $QuoteDir -Force | Out-Null
+    }
+    $CustomQuoteInput | Out-File -FilePath $QuotePath -Encoding UTF8 -Force
+    Write-Host " [CONFIG] Saved acknowledgment quote: '$CustomQuoteInput'" -ForegroundColor Cyan
+}
+catch {
+    Write-Host " [WARNING] Failed to save custom quote: $_" -ForegroundColor Yellow
+}
 
 Write-Host " [SYSTEM] Initializing Sakshi Daemon Registration for task: '$NewTaskName'..." -ForegroundColor Cyan
 
-# 4. PURGE DUPLICATES / PREVIOUS INSTANCES
+# 4. PURGE DUPLICATES / PREVIOUS INSTANCES & PROCESSES
+Write-Host " [CLEANUP] Stopping running background instances..." -ForegroundColor Yellow
+Get-CimInstance Win32_Process -Filter "Name = 'powershell.exe'" -ErrorAction SilentlyContinue | Where-Object {
+    $_.CommandLine -like "*Sakshi.ps1*" -or $_.CommandLine -like "*Death.ps1*"
+} | ForEach-Object {
+    Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue
+}
+
 if (Get-ScheduledTask -TaskName $NewTaskName -ErrorAction SilentlyContinue) {
     Unregister-ScheduledTask -TaskName $NewTaskName -Confirm:$false
     Write-Host " [CLEANUP] Unregistered existing instance of task: $NewTaskName" -ForegroundColor Yellow

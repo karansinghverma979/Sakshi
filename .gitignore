@@ -20,3 +20,6 @@ Desktop.ini
 *.user
 *.userosscache
 *.sln.docstates
+
+# Local custom quote configuration
+Modules/Death/quote.txt

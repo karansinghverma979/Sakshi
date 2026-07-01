@@ -9,6 +9,18 @@
 $PSScriptRoot = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
 $LogFilePath = Join-Path -Path $PSScriptRoot -ChildPath "Death.log"
 $VisualsDir = Join-Path -Path $PSScriptRoot -ChildPath "Visuals"
+$QuoteFilePath = Join-Path -Path $PSScriptRoot -ChildPath "quote.txt"
+
+# Default quote
+$CustomQuote = " KEEP CALM AND STUDY HARD. "
+if (Test-Path -Path $QuoteFilePath) {
+    try {
+        $LoadedQuote = Get-Content -Path $QuoteFilePath -Raw
+        if (-not [string]::IsNullOrWhiteSpace($LoadedQuote)) {
+            $CustomQuote = " $($LoadedQuote.Trim()) "
+        }
+    } catch { }
+}
 
 function Write-Log {
     param([string]$Message)
@@ -196,6 +208,10 @@ try {
     $BackgroundImage = $Window.FindName("BackgroundImage")
     $CountdownDisplay = $Window.FindName("CountdownDisplay")
 
+    if ($null -ne $AcceptButton) {
+        $AcceptButton.Content = $CustomQuote
+    }
+
     $script:SecondsRemaining = 60
     $CountdownTimer = New-Object System.Windows.Threading.DispatcherTimer
     $CountdownTimer.Interval = [TimeSpan]::FromSeconds(1)
@@ -238,7 +254,7 @@ try {
         $CountdownTimer.Start()
         $ImageTimer.Start()
         $Window.Resources["HeaderPulseAnimation"].Begin($Window)
-        if ($MediaPlayer) { 
+        if ($MediaPlayer -and $BackgroundSoundPath) { 
             $MediaPlayer.Play()
             $MediaPlayer.Add_MediaEnded({ $MediaPlayer.Position = [TimeSpan]::Zero; $MediaPlayer.Play() })
         }
@@ -251,7 +267,7 @@ try {
         } else {
             $CountdownTimer.Stop()
             $ImageTimer.Stop()
-            if ($MediaPlayer) { $MediaPlayer.Stop(); $MediaPlayer.Close() }
+            if ($MediaPlayer -and $BackgroundSoundPath) { $MediaPlayer.Stop(); $MediaPlayer.Close() }
             try {
                 if ($null -ne $script:OriginalMuteState) {
                     [Audio]::Mute = $script:OriginalMuteState
