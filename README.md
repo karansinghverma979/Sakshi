@@ -1,4 +1,4 @@
-
+<img width="1600" height="1200" alt="d2" src="https://github.com/user-attachments/assets/54dfb6e6-64e0-4c29-a392-d4575f3f42ec" />
 </strong>
 # <strong><a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Impact&weight=900&size=50&duration=2500&pause=500&color=FF4500&center=true&vCenter=true&width=800&height=80&lines=☠️+MEMENTO+MORI+☠️;⌚+REMEMBER+THAT+YOU+MUST+DIE+⌚;⌛+YOUR+DAYS+ARE+NUMBERED+⌛" alt="Memento Mori" /></a></strong>
 
@@ -92,12 +92,17 @@ The primary behavioral interceptor. When triggered, it locks down focus:
 
 ## 🎨 WPF Visual Interface Specs
 
+<img width="1600" height="1200" alt="d1" src="https://github.com/user-attachments/assets/abb654f9-9194-4336-9ddb-afa2e9f5d3ac" />
+
+
 > [!TIP]
 > The lockdown window uses rich aesthetics designed to command attention and feel premium:
 *   **Deep Dark Backdrop**: Pure `#000000` solid background with a blurry, semi-transparent (`Opacity="0.25"`) overlay that rotates randomized visual slides from the `Visuals/` directory.
 *   **Drop-Shadow Header Glow**: Pulsating red typography (`💀MEMENTO MORI💀`) driven by a Storyboard animation shifting the blur radius between `20` and `60` dynamically.
 *   **Urgency Display**: Center-staged timer fading from dark maroon to blood red as the clock winds down.
 *   **Glow Button Style**: Fades in a custom drop-shadow button featuring your personalized study quote.
+
+<img width="1600" height="1200" alt="d2" src="https://github.com/user-attachments/assets/2c97923b-adb2-46f4-82be-328e06b04c59" />
 
 ---
 
