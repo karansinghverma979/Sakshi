@@ -1,4 +1,4 @@
-<img width="1600" height="1200" alt="d2" src="https://github.com/user-attachments/assets/54dfb6e6-64e0-4c29-a392-d4575f3f42ec" />
+
 </strong>
 # <strong><a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Impact&weight=900&size=50&duration=2500&pause=500&color=FF4500&center=true&vCenter=true&width=800&height=80&lines=☠️+MEMENTO+MORI+☠️;⌚+REMEMBER+THAT+YOU+MUST+DIE+⌚;⌛+YOUR+DAYS+ARE+NUMBERED+⌛" alt="Memento Mori" /></a></strong>
 
