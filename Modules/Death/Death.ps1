@@ -137,6 +137,25 @@ public class Audio {
         set { Marshal.ThrowExceptionForHR(Vol().SetMute(value, Guid.Empty)); }
     }
 
+    private static bool IsExempt(uint pid, uint myPid) {
+        if (pid == myPid) return true;
+        try {
+            using (var proc = System.Diagnostics.Process.GetProcessById((int)pid)) {
+                string name = proc.ProcessName.ToLower();
+                if (name.Contains("powershell") || 
+                    name.Contains("pwsh") || 
+                    name.Contains("conhost") || 
+                    name.Contains("windowsterminal") || 
+                    name.Contains("openconsole") || 
+                    name.Contains("microsoft.media.player") ||
+                    name.Contains("wmplayer")) {
+                    return true;
+                }
+            }
+        } catch { }
+        return false;
+    }
+
     public static void MuteOtherSessions(bool mute, uint myPid) {
         try {
             var enumerator = new MMDeviceEnumeratorComObject() as IMMDeviceEnumerator;
@@ -174,9 +193,9 @@ public class Audio {
                             uint pid = 0;
                             session2.GetProcessId(out pid);
                             
-                            // If mute is true: only mute other processes.
+                            // If mute is true: only mute other non-exempt processes.
                             // If mute is false: unmute EVERYTHING unconditionally.
-                            if (!mute || pid != myPid) {
+                            if (!mute || !IsExempt(pid, myPid)) {
                                 var simpleVolume = session as ISimpleAudioVolume;
                                 if (simpleVolume != null) {
                                     simpleVolume.SetMute(mute, Guid.Empty);
@@ -337,6 +356,24 @@ try {
     }
 
     $script:SecondsRemaining = 60
+    
+    $FocusTimer = New-Object System.Windows.Threading.DispatcherTimer
+    $FocusTimer.Interval = [TimeSpan]::FromMilliseconds(100)
+    $FocusTimer.Add_Tick({
+        if ($script:SecondsRemaining -gt 0 -and $null -ne $script:WindowHandle) {
+            try {
+                $fg = [Audio]::GetForegroundWindow()
+                if ($fg -ne $script:WindowHandle) {
+                    [Audio]::SetForegroundWindow($script:WindowHandle) | Out-Null
+                    $Window.Activate() | Out-Null
+                    $Window.Focus() | Out-Null
+                }
+            } catch { }
+        } else {
+            $FocusTimer.Stop()
+        }
+    })
+
     $CountdownTimer = New-Object System.Windows.Threading.DispatcherTimer
     $CountdownTimer.Interval = [TimeSpan]::FromSeconds(1)
     $CountdownTimer.Add_Tick({
@@ -344,13 +381,6 @@ try {
         
         try {
             [Audio]::MuteOtherSessions($true, $script:MyPid)
-
-            if ($script:SecondsRemaining -gt 0 -and $null -ne $script:WindowHandle) {
-                $fg = [Audio]::GetForegroundWindow()
-                if ($fg -ne $script:WindowHandle) {
-                    [Audio]::SetForegroundWindow($script:WindowHandle) | Out-Null
-                }
-            }
         } catch { }
         
         if ($script:SecondsRemaining -gt 0) {
@@ -367,6 +397,7 @@ try {
         }
         else {
             $CountdownTimer.Stop()
+            $FocusTimer.Stop()
             
             # --- SOUND EFFECT ON COMPLETION ---
             # Three-tone chime signaling unlock
@@ -406,6 +437,7 @@ try {
     $Window.Add_Loaded({
         $script:WindowHandle = (New-Object System.Windows.Interop.WindowInteropHelper($Window)).Handle
         $CountdownTimer.Start()
+        $FocusTimer.Start()
         $ImageTimer.Start()
         $Window.Topmost = $true
         $Window.Activate() | Out-Null
@@ -423,6 +455,7 @@ try {
             $e.Cancel = $true
         } else {
             $CountdownTimer.Stop()
+            $FocusTimer.Stop()
             $ImageTimer.Stop()
             if ($MediaPlayer -and $BackgroundSoundPath) { $MediaPlayer.Stop(); $MediaPlayer.Close() }
             try {
