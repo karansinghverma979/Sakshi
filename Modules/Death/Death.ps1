@@ -101,6 +101,15 @@ interface IAudioSessionManager2 {
     int UnregisterDuckNotification(IntPtr duckNotification);
 }
 
+[ComImport]
+[Guid("a5cd92ff-29be-454c-8d04-d82879fb3f1b")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IVirtualDesktopManager {
+    int IsWindowOnCurrentVirtualDesktop(IntPtr topLevelWindow, [MarshalAs(UnmanagedType.Bool)] out bool onCurrentDesktop);
+    int GetWindowDesktopId(IntPtr topLevelWindow, out Guid desktopId);
+    int MoveWindowToDesktop(IntPtr topLevelWindow, ref Guid desktopId);
+}
+
 [Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 interface IMMDevice {
     int Activate(ref Guid id, int clsCtx, int activationParams, [MarshalAs(UnmanagedType.IUnknown)] out object obj);
@@ -122,6 +131,27 @@ public class Audio {
     [DllImport("user32.dll")]
     public static extern bool SetForegroundWindow(IntPtr hWnd);
 
+    private static IVirtualDesktopManager _desktopManager;
+
+    static Audio() {
+        try {
+            Type type = Type.GetTypeFromCLSID(new Guid("aa50908a-2d39-4991-97f7-de3d53459c81"));
+            _desktopManager = (IVirtualDesktopManager)Activator.CreateInstance(type);
+        } catch {
+            _desktopManager = null;
+        }
+    }
+
+    public static bool IsOnCurrentDesktop(IntPtr hWnd) {
+        if (_desktopManager == null) return true;
+        try {
+            bool onCurrent = true;
+            int hr = _desktopManager.IsWindowOnCurrentVirtualDesktop(hWnd, out onCurrent);
+            if (hr == 0) return onCurrent;
+        } catch { }
+        return true;
+    }
+
     private static IAudioEndpointVolume Vol() {
         var enumerator = new MMDeviceEnumeratorComObject() as IMMDeviceEnumerator;
         IMMDevice dev = null;
@@ -138,6 +168,7 @@ public class Audio {
     }
 
     private static bool IsExempt(uint pid, uint myPid) {
+        if (pid == 0) return true; // System sounds / background tone driver
         if (pid == myPid) return true;
         try {
             using (var proc = System.Diagnostics.Process.GetProcessById((int)pid)) {
@@ -146,9 +177,7 @@ public class Audio {
                     name.Contains("pwsh") || 
                     name.Contains("conhost") || 
                     name.Contains("windowsterminal") || 
-                    name.Contains("openconsole") || 
-                    name.Contains("microsoft.media.player") ||
-                    name.Contains("wmplayer")) {
+                    name.Contains("openconsole")) {
                     return true;
                 }
             }
@@ -362,6 +391,18 @@ try {
     $FocusTimer.Add_Tick({
         if ($script:SecondsRemaining -gt 0 -and $null -ne $script:WindowHandle) {
             try {
+                # 1. Virtual Desktop Escape Prevention
+                $isOnCurrent = [Audio]::IsOnCurrentDesktop($script:WindowHandle)
+                if (-not $isOnCurrent) {
+                    $Window.Hide()
+                    $Window.Show()
+                    $Window.Topmost = $false
+                    $Window.Topmost = $true
+                    $Window.Activate() | Out-Null
+                    $Window.Focus() | Out-Null
+                }
+
+                # 2. Foreground Window Focus Lock
                 $fg = [Audio]::GetForegroundWindow()
                 if ($fg -ne $script:WindowHandle) {
                     [Audio]::SetForegroundWindow($script:WindowHandle) | Out-Null
