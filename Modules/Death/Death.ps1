@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Memento Mori - Absolute Finality (Mechanical Clock Edition)
+    Memento Mori - Absolute Finality (Mechanical Clock Edition V5)
 .DESCRIPTION
-    Features a realistic alternating Tick-Tock sound and a perfectly stable UI.
+    Features a realistic alternating Tick-Tock sound, virtual desktop lock, and a perfectly stable UI.
 #>
 
 #region --- Setup & Configuration ---
@@ -30,10 +30,11 @@ function Write-Log {
     } catch { }
 }
 
-# --- System Audio Takeover (WASAPI Direct Control) ---
+# --- System Audio Takeover (WASAPI & Win32 Audio control) ---
 $AudioCode = @"
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 [Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 interface IAudioEndpointVolume {
@@ -124,7 +125,7 @@ interface IMMDeviceEnumerator {
 [ComImport, Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
 class MMDeviceEnumeratorComObject { }
 
-public class AudioEngineV4 {
+public class AudioEngineV5 {
     [DllImport("user32.dll")]
     public static extern IntPtr GetForegroundWindow();
 
@@ -136,7 +137,7 @@ public class AudioEngineV4 {
 
     private static IVirtualDesktopManager _desktopManager;
 
-    static AudioEngineV4() {
+    static AudioEngineV5() {
         try {
             Type type = Type.GetTypeFromCLSID(new Guid("AA509086-5CA9-4C25-8F95-589D3C07B48A"));
             _desktopManager = (IVirtualDesktopManager)Activator.CreateInstance(type);
@@ -153,6 +154,13 @@ public class AudioEngineV4 {
             if (hr == 0) return onCurrent;
         } catch { }
         return true;
+    }
+
+    public static void MoveToDesktop(IntPtr hWnd, Guid desktopId) {
+        if (_desktopManager == null) return;
+        try {
+            _desktopManager.MoveWindowToDesktop(hWnd, ref desktopId);
+        } catch { }
     }
 
     public static void PlayBeep(double frequency, int durationMs, double volume = 0.5) {
@@ -204,7 +212,7 @@ public class AudioEngineV4 {
     }
 
     public static void PlayBeepAsync(double frequency, int durationMs, double volume = 0.5) {
-        System.Threading.ThreadPool.QueueUserWorkItem(state => {
+        ThreadPool.QueueUserWorkItem(state => {
             PlayBeep(frequency, durationMs, volume);
         });
     }
@@ -225,7 +233,7 @@ public class AudioEngineV4 {
     }
 
     private static bool IsExempt(uint pid, uint myPid) {
-        if (pid == 0) return true; // System sounds / background tone driver
+        if (pid == 0) return true; // System sounds / background tones
         if (pid == myPid) return true;
         try {
             using (var proc = System.Diagnostics.Process.GetProcessById((int)pid)) {
@@ -278,7 +286,6 @@ public class AudioEngineV4 {
                         if (session2 != null) {
                             // Check if it is the system sounds session (HR = 0 means true)
                             if (session2.IsSystemSoundsSession() == 0) {
-                                // System Sounds - Do not mute
                                 Marshal.ReleaseComObject(session);
                                 continue;
                             }
@@ -314,15 +321,14 @@ public class AudioEngineV4 {
 "@
 
 try {
-    if (-not ([System.Management.Automation.PSTypeName]"AudioEngineV4").Type) {
+    if (-not ([System.Management.Automation.PSTypeName]"AudioEngineV5").Type) {
         Add-Type -TypeDefinition $AudioCode
     }
     $script:MyPid = [System.Diagnostics.Process]::GetCurrentProcess().Id
-    [AudioEngineV4]::MuteOtherSessions($true, $script:MyPid)
+    [AudioEngineV5]::MuteOtherSessions($true, $script:MyPid)
 } catch {
     Write-Log "AUDIO INTERFERENCE WARNING: Failed to control session mute states via WASAPI. Details: $_"
 }
-
 
 # --- Sound Discovery ---
 $AllSounds = Get-ChildItem -Path $PSScriptRoot -File | Where-Object { $_.Extension -match "\.(mp3|wav)$" }
@@ -352,7 +358,7 @@ if (Test-Path -Path $VisualsDir) {
 $MediaPlayer = New-Object System.Windows.Media.MediaPlayer
 if ($BackgroundSoundPath) { 
     $MediaPlayer.Open([System.Uri]$BackgroundSoundPath)
-    $MediaPlayer.Volume = 0.5 # Lower volume to hear the clock ticks better
+    $MediaPlayer.Volume = 0.5
 }
 #endregion
 
@@ -455,22 +461,22 @@ try {
     $FocusTimer.Add_Tick({
         if ($script:SecondsRemaining -gt 0 -and $null -ne $script:WindowHandle) {
             try {
-                # 1. Virtual Desktop Escape Prevention
-                $isOnCurrent = [AudioEngineV4]::IsOnCurrentDesktop($script:WindowHandle)
+                # 1. Active Virtual Desktop Snap
+                $isOnCurrent = [AudioEngineV5]::IsOnCurrentDesktop($script:WindowHandle)
                 if (-not $isOnCurrent) {
-                    $Window.Hide()
-                    $Window.Show()
-                    $script:WindowHandle = (New-Object System.Windows.Interop.WindowInteropHelper($Window)).Handle
-                    $Window.Topmost = $false
-                    $Window.Topmost = $true
-                    $Window.Activate() | Out-Null
-                    $Window.Focus() | Out-Null
+                    $Bytes = (Get-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VirtualDesktops' -ErrorAction SilentlyContinue).CurrentVirtualDesktop
+                    if ($null -ne $Bytes) {
+                        $CurrentDesktopGuid = [Guid]::new($Bytes)
+                        [AudioEngineV5]::MoveToDesktop($script:WindowHandle, $CurrentDesktopGuid)
+                    }
                 }
 
-                # 2. Foreground Window Focus Lock
-                $fg = [AudioEngineV4]::GetForegroundWindow()
+                # 2. Foreground Focus Lock
+                $fg = [AudioEngineV5]::GetForegroundWindow()
                 if ($fg -ne $script:WindowHandle) {
-                    [AudioEngineV4]::SetForegroundWindow($script:WindowHandle) | Out-Null
+                    [AudioEngineV5]::SetForegroundWindow($script:WindowHandle) | Out-Null
+                    $Window.Topmost = $false
+                    $Window.Topmost = $true
                     $Window.Activate() | Out-Null
                     $Window.Focus() | Out-Null
                 }
@@ -486,7 +492,7 @@ try {
         $script:SecondsRemaining--
         
         try {
-            [AudioEngineV4]::MuteOtherSessions($true, $script:MyPid)
+            [AudioEngineV5]::MuteOtherSessions($true, $script:MyPid)
         } catch { }
         
         if ($script:SecondsRemaining -gt 0) {
@@ -496,9 +502,9 @@ try {
             # --- MECHANICAL TICK-TOCK ---
             # Alternates frequency every second for a realistic clock feel
             if ($script:SecondsRemaining % 2 -eq 0) {
-                [AudioEngineV4]::PlayBeepAsync(1800, 15)
+                [AudioEngineV5]::PlayBeepAsync(1800, 15)
             } else {
-                [AudioEngineV4]::PlayBeepAsync(1500, 15)
+                [AudioEngineV5]::PlayBeepAsync(1500, 15)
             }
         }
         else {
@@ -507,11 +513,11 @@ try {
             
             # --- SOUND EFFECT ON COMPLETION ---
             # Three-tone chime signaling unlock
-            [AudioEngineV4]::PlayBeepAsync(1000, 100)
+            [AudioEngineV5]::PlayBeepAsync(1000, 100)
             Start-Sleep -Milliseconds 150
-            [AudioEngineV4]::PlayBeepAsync(1200, 100)
+            [AudioEngineV5]::PlayBeepAsync(1200, 100)
             Start-Sleep -Milliseconds 150
-            [AudioEngineV4]::PlayBeepAsync(1500, 250)
+            [AudioEngineV5]::PlayBeepAsync(1500, 250)
             
             $CountdownDisplay.Visibility = 'Collapsed'
             $AcceptButton.Visibility = 'Visible'
@@ -565,8 +571,8 @@ try {
             $ImageTimer.Stop()
             if ($MediaPlayer -and $BackgroundSoundPath) { $MediaPlayer.Stop(); $MediaPlayer.Close() }
             try {
-                [AudioEngineV4]::MuteOtherSessions($false, 0)
-                [AudioEngineV4]::Mute = $false
+                [AudioEngineV5]::MuteOtherSessions($false, 0)
+                [AudioEngineV5]::Mute = $false
             } catch { }
         }
     })
