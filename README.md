@@ -1,4 +1,4 @@
-# 👁️ SAKSHI (साक्षी - The Witness)
+# 👁️ SAKSHI (साक्षी The Witness)
 
 <p align="center">
   <img src="https://img.shields.io/badge/PLATFORM-WINDOWS%2011-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Platform"/>
