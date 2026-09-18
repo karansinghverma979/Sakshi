@@ -2,11 +2,15 @@
 
 # Runtime & Telemetry Logs
 *.log
+*.tmp
+*.temp
 
 # Windows System Files
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+$RECYCLE.BIN/
+*.lnk
 
 # Environment / Local Configurations
 .env
@@ -16,16 +20,20 @@ Desktop.ini
 # IDE & Editor Directories
 .vscode/
 .idea/
+.vs/
 *.suo
 *.user
+*.userprefs
 *.userosscache
 *.sln.docstates
 
 # Local custom quote configuration
 Modules/Death/quote.txt
 
-# Local custom visual files
+# Local custom visual & scratch files
 Modules/Death/Visuals/
+scratch/
+temp/
 
 # .NET Build Outputs & Binaries
 **/bin/
@@ -34,4 +42,3 @@ dist/
 *.exe
 *.dll
 *.pdb
-
