@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>..\assets\Overviews.ico</ApplicationIcon>
+    <AssemblyName>Overviews_SelfContained_Setup</AssemblyName>
+    <RootNamespace>Sakshi.Overviews.Setup</RootNamespace>
+    <PublishSingleFile>true</PublishSingleFile>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <BuiltInComSupport>true</BuiltInComSupport>
+    <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
+    <UseSharedCompilation>false</UseSharedCompilation>
+    <BuildServerMode>false</BuildServerMode>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <Version>2.0.0</Version>
+    <Authors>Karan Singh Verma</Authors>
+    <Company>Sakshi Ecosystem</Company>
+    <Product>Sakshi // Overviews Setup &amp; Teardown Wizard</Product>
+    <Description>Universal 1-Click Installer &amp; Teardown Wizard for Overviews</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\publish\Overviews.exe" Link="Overviews.exe" Condition="Exists('..\publish\Overviews.exe')" />
+  </ItemGroup>
+
+</Project>

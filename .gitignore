@@ -38,6 +38,8 @@ temp/
 # .NET Build Outputs & Binaries
 **/bin/
 **/obj/
+**/publish/
+**/dist/
 dist/
 *.exe
 *.dll

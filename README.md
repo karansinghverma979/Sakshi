@@ -43,6 +43,7 @@ Sakshi enforces strict separation of concerns. The host repository governs platf
 | Module | Version | Status | Primary Capability | Documentation |
 | :--- | :--- | :--- | :--- | :--- |
 | **💀 Death** | **v1.0.0** | **`Active / Production`** | Unescapable AMOLED countdown lockdown, low-level Win32 keyboard hook (`WH_KEYBOARD_LL`), 4-tier media freeze, WASAPI audio isolation, and 0-RAM Task Scheduler trigger. | [**Death Module Dossier ➔**](Modules/Death/README.md) |
+| **👁️ Overviews** | **v2.0.0** | **`Active / Production`** | Instant Google AI Overview summoner, `Ctrl+Alt+O` native Explorer shortcut (0 MB RAM), Win32 `SW_MAXIMIZE` full-screen enforcement, and standalone setup installer & vanisher. | [**Overviews Module Dossier ➔**](Modules/Overviews/README.md) |
 | **🧭 Drift** | — | `Planned` | Real-time foreground task misalignment and tab-paralysis detection. | *Reserved* |
 | **🧘 Posture** | — | `Planned` | Micro-break physical ergonomics and screen strain supervisor. | *Reserved* |
 | **🛡️ Sentry** | — | `Planned` | Win32 AFK tracker and idle-aware intervention coordinator. | *Reserved* |
@@ -103,21 +104,31 @@ Sakshi/
 ├── LICENSE                       # MIT License
 ├── README.md                     # Master platform documentation
 ├── Release.md                    # Master release roadmap & version ledger
-├── Release-1.md                  # Sakshi v1.0.0 Engineering Dossier
-├── Release-2.md                  # Sakshi v2.0.0 Future Development Ledger
+├── Release-1.md                  # Sakshi v1.0.0 Engineering Dossier (Death)
+├── Release-2.md                  # Sakshi v2.0.0 Engineering Dossier (Overviews)
 ├── Sakshi.ps1                    # Platform supervisory orchestrator (standby)
 └── Modules/
-    └── Death/                    # 💀 Death (Memento Mori) Disciplinary Engine
+    ├── Death/                    # 💀 Death (Memento Mori) Disciplinary Engine
+    │   ├── README.md             # Sovereign module documentation
+    │   ├── Death.csproj          # .NET 9 WPF single-file project configuration
+    │   ├── app.manifest          # PerMonitorV2 DPI awareness manifest
+    │   ├── App.xaml / .cs        # Entry point, single-instance mutex & CLI flags
+    │   ├── MainWindow.xaml / .cs # AMOLED interface, keyboard hook & animations
+    │   ├── AudioEngine.cs        # WASAPI isolation, GSMTC pause & PCM synth
+    │   ├── The Whistle of Death.mp3 # Embedded atmospheric background audio
+    │   ├── Install-Death.ps1     # Automated compiler & Task Scheduler installer
+    │   ├── Uninstall-Death.ps1   # Task deregistration and cleanup script
+    │   └── assets/               # Real UI screenshots (countdown & unlocked states)
+    └── Overviews/                # 👁️ Overviews (Google AI Overview Sentry)
         ├── README.md             # Sovereign module documentation
-        ├── Death.csproj          # .NET 9 WPF single-file project configuration
+        ├── Overviews.csproj      # .NET 9 WinExe single-file project configuration
         ├── app.manifest          # PerMonitorV2 DPI awareness manifest
-        ├── App.xaml / .cs        # Entry point, single-instance mutex & CLI flags
-        ├── MainWindow.xaml / .cs # AMOLED interface, keyboard hook & animations
-        ├── AudioEngine.cs        # WASAPI isolation, GSMTC pause & PCM synth
-        ├── The Whistle of Death.mp3 # Embedded atmospheric background audio
-        ├── Install-Death.ps1     # Automated compiler & Task Scheduler installer
-        ├── Uninstall-Death.ps1   # Task deregistration and cleanup script
-        └── assets/               # Real UI screenshots (countdown & unlocked states)
+        ├── Program.cs            # Zero-daemon instant WebApp launcher (<15ms)
+        ├── Install-Overviews.ps1 # Workstation compiler & triad packager
+        ├── Uninstall-Overviews.ps1 # Clean teardown & vanish script
+        ├── Overviews_SelfContained_Setup.ps1 # Universal PS5.1/7+ GitHub fetcher
+        ├── Setup/                # Self-contained offline setup wizard project
+        └── assets/               # Custom multi-res application icons (.ico / .png)
 ```
 
 ---
@@ -127,10 +138,10 @@ Sakshi/
 Sakshi tracks every version milestone through structured engineering dossiers:
 
 * **[`Release-1.md`](Release-1.md)**: Sakshi v1.0.0 — Standalone Death Engine, 0-RAM Task Scheduler, Low-Level Hook Lockdown.
-* **[`Release-2.md`](Release-2.md)**: Sakshi v2.0.0 — Active placeholder for subsequent platform expansions.
+* **[`Release-2.md`](Release-2.md)**: Sakshi v2.0.0 — Overviews Module, Native `Ctrl+Alt+O` Shell Shortcut, GitHub Distribution Triad.
 * **[`Release.md`](Release.md)**: Master release roadmap, contributor guide, and cross-release index.
 
 ---
 
 *   **Architect:** Karan Singh Verma
-*   **System Version:** Sakshi v1.0.0 (Modular Platform Release)
+*   **System Version:** Sakshi v2.0.0 (Modular Platform Release)

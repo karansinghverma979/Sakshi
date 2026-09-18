@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>assets\Overviews.ico</ApplicationIcon>
+    <AssemblyName>Overviews</AssemblyName>
+    <RootNamespace>Sakshi.Overviews</RootNamespace>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <UseSharedCompilation>false</UseSharedCompilation>
+    <BuildServerMode>false</BuildServerMode>
+    <Version>2.0.0</Version>
+    <Authors>Karan Singh Verma</Authors>
+    <Company>Sakshi Ecosystem</Company>
+    <Product>Sakshi // Overviews</Product>
+    <Description>Instant Google AI Overview Sentry for Windows 11</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Setup\**" />
+    <None Remove="Setup\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\Overviews.ico" />
+    <Resource Include="assets\Overviews.png" />
+  </ItemGroup>
+
+</Project>
