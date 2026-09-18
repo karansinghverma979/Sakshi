@@ -24,6 +24,7 @@ This document serves as the living release index, engineering roadmap, and versi
 | :--- | :--- | :--- | :--- |
 | **`v1.0.0`** | **`Active / Production`** | [`Release-1.md`](Release-1.md) | Decoupled modular architecture; standalone .NET 9 Death engine deployed to `~/.local/bin/Death.exe`; 0-RAM Task Scheduler; low-level keyboard hook (`WH_KEYBOARD_LL`); taskbar icon suppression; 4-tier media freeze & WASAPI session isolation. |
 | **`v2.0.0`** | **`Active / Production`** | [`Release-2.md`](Release-2.md) | **Overviews Module**: Instant full-screen Google AI Overview sentry; native `Ctrl+Alt+O` Windows Explorer shortcut (0 MB idle RAM / 0% CPU); Win32 `SW_MAXIMIZE` full-screen enforcement; complete eradication of legacy `g.cmd`; synchronized distribution triad (`Overviews_SelfContained_Setup.ps1`, `Overviews_SelfContained_Setup.exe`, `Overviews_SelfContained.exe`) with SmartScreen MOTW bypass. |
+| **`v3.0.0`** | **`Active / Production`** | [`Release-3.md`](Release-3.md) | **Apex Module**: DirectX GPU-accelerated Virtual Desktop & Z-Order (Topmost) Controller; native `Ctrl+Alt+A` Windows Explorer shortcut (0 MB idle RAM / 0% CPU); native COM `IVirtualDesktopManager` discovery; 1-minute inactivity auto-destruct; System Inviolability Shield. |
 | **`vNext`**  | `Future Roadmap`          | *Unscheduled*                 | Active-sensing orchestrator, Drift foreground task supervisor, and posture ergonomics. |
 
 ---

@@ -1,0 +1,379 @@
+<Window x:Class="Apex.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Apex" 
+        Icon="Assets/Apex.ico"
+        Height="650" 
+        Width="780" 
+        MinHeight="440"
+        MinWidth="620"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        FontFamily="Segoe UI Variable Display, Segoe UI, sans-serif">
+
+    <Window.Resources>
+        <!-- Custom ScrollBar Styling for OLED Pitch Black -->
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="#050505"/>
+            <Setter Property="Width" Value="6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Track x:Name="PART_Track" IsDirectionReversed="true">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Rectangle Fill="#333333" RadiusX="3" RadiusY="3" Margin="1"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Standard Header Button Style -->
+        <Style x:Key="HeaderBtnStyle" TargetType="Button">
+            <Setter Property="Background" Value="#141414"/>
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="BorderBrush" Value="#282828"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#00E5FF"/>
+                    <Setter Property="Foreground" Value="#00E5FF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DangerBtnStyle" TargetType="Button" BasedOn="{StaticResource HeaderBtnStyle}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#FF5252"/>
+                    <Setter Property="Foreground" Value="#FF5252"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CloseBtnStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#888888"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="34"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#C42B1C"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Context Menu & Item Styling for OLED Pitch Black -->
+        <Style TargetType="ContextMenu">
+            <Setter Property="Background" Value="#0A0A0A"/>
+            <Setter Property="BorderBrush" Value="#242424"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="8" 
+                                Padding="{TemplateBinding Padding}">
+                            <StackPanel IsItemsHost="True"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="MenuItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border x:Name="Border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="6" 
+                                Padding="{TemplateBinding Padding}" 
+                                Margin="2,1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter x:Name="Icon" ContentSource="Icon" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <ContentPresenter Grid.Column="1" ContentSource="Header" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#1A1A1A"/>
+                                <Setter Property="Foreground" Value="#00E5FF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#555555"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DangerMenuItemStyle" TargetType="MenuItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#FF6B6B"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border x:Name="Border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="6" 
+                                Padding="{TemplateBinding Padding}" 
+                                Margin="2,1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter x:Name="Icon" ContentSource="Icon" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <ContentPresenter Grid.Column="1" ContentSource="Header" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#221010"/>
+                                <Setter Property="Foreground" Value="#FF5252"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#555555"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Separator">
+            <Setter Property="Background" Value="#1F1F1F"/>
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="Margin" Value="4,4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Separator">
+                        <Border Background="{TemplateBinding Background}" Height="{TemplateBinding Height}" Margin="{TemplateBinding Margin}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- Main Outer Container with 1px Sleek Border & Pitch Black Background -->
+    <Border Background="#000000" 
+            BorderBrush="#242424" 
+            BorderThickness="1" 
+            CornerRadius="10" 
+            ClipToBounds="True">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- 0. Header -->
+                <RowDefinition Height="Auto"/> <!-- 1. Search Box -->
+                <RowDefinition Height="*"/>    <!-- 2. Window List ScrollViewer -->
+                <RowDefinition Height="Auto"/> <!-- 3. Status Bar / Footer -->
+            </Grid.RowDefinitions>
+
+            <!-- 0. Header Bar (Draggable) -->
+            <Border x:Name="pnlHeader" Grid.Row="0" Background="#0A0A0A" BorderBrush="#1C1C1C" BorderThickness="0,0,0,1" Padding="16,12" MouseLeftButtonDown="PnlHeader_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="⚡" FontSize="17" Foreground="#00E5FF" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="APEX" FontSize="15" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Blocklist Toggle Button (Top Left of Pinned Badge) -->
+                        <Button x:Name="btnBlocklistToggle" 
+                                Content="🚫 Blocklist (0)" 
+                                Style="{StaticResource HeaderBtnStyle}" 
+                                Margin="0,0,8,0" 
+                                Click="BtnBlocklistToggle_Click" 
+                                ToolTip="View and manage blacklisted applications"/>
+
+                        <!-- Pinned Windows Counter Badge (Left of Unpin All) -->
+                        <Border x:Name="badgePinnedCount" 
+                                Background="#141414" 
+                                BorderBrush="#282828" 
+                                BorderThickness="1" 
+                                CornerRadius="8" 
+                                Height="34"
+                                Padding="14,0" 
+                                Margin="0,0,8,0" 
+                                VerticalAlignment="Center" 
+                                ToolTip="Total active pinned windows">
+                            <TextBlock x:Name="txtPinnedCount" 
+                                       Text="📌 0 Pinned" 
+                                       Foreground="#888888" 
+                                       FontSize="13" 
+                                       FontWeight="Bold" 
+                                       VerticalAlignment="Center"/>
+                        </Border>
+
+                        <!-- Swapped: Unpin All First -->
+                        <Button x:Name="btnUnpinAll" 
+                                Content="⏏ Unpin All" 
+                                Style="{StaticResource DangerBtnStyle}" 
+                                Margin="0,0,8,0" 
+                                Click="BtnUnpinAll_Click" 
+                                ToolTip="Reset all active pinned windows to normal depth"/>
+
+                        <!-- Swapped: Refresh Second -->
+                        <Button x:Name="btnRefresh" 
+                                Content="⟲ Refresh" 
+                                Style="{StaticResource HeaderBtnStyle}" 
+                                Margin="0,0,10,0" 
+                                Click="BtnRefresh_Click" 
+                                ToolTip="Refresh Window Tree (F5)"/>
+
+                        <Button x:Name="btnClose" 
+                                Content="✕" 
+                                Style="{StaticResource CloseBtnStyle}" 
+                                Click="BtnClose_Click" 
+                                ToolTip="Close (Esc)"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 1. Search & Filter Bar -->
+            <Border Grid.Row="1" Background="#050505" Padding="18,12" BorderBrush="#161616" BorderThickness="0,0,0,1">
+                <Grid>
+                    <TextBox x:Name="txtFilter" 
+                             Background="#0E0E0E" 
+                             Foreground="#E0E0E0" 
+                             CaretBrush="#00E5FF" 
+                             BorderBrush="#262626" 
+                             BorderThickness="1" 
+                             Padding="16,12" 
+                             FontSize="15" 
+                             FontWeight="SemiBold"
+                             VerticalAlignment="Center"
+                             TextChanged="TxtFilter_TextChanged">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                    <TextBlock x:Name="txtFilterPlaceholder" 
+                               Text="🔍 Type to filter windows across all desktops... (Esc to exit)" 
+                               Foreground="#555555" 
+                               IsHitTestVisible="False" 
+                               FontSize="15" 
+                               FontWeight="Medium"
+                               VerticalAlignment="Center" 
+                               Margin="18,0,0,0"/>
+                </Grid>
+            </Border>
+
+            <!-- 2. Dynamic Virtual Desktop & Window Tree -->
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="18,14">
+                <StackPanel x:Name="pnlWindows">
+                    <!-- Dynamic desktop cards injected here -->
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- 3. Footer Status Bar -->
+            <Border Grid.Row="3" Background="#080808" BorderBrush="#181818" BorderThickness="0,1,0,0" Padding="18,12,12,12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="txtStatus" Grid.Column="0" Text="Ready • Click card to teleport • [○ PIN] to pin" Foreground="#777777" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                        <TextBlock x:Name="txtAutoKillTimer" Text="⏱️ 60s" Foreground="#555555" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,14,0" ToolTip="Self-Destruct Watchdog: Auto-terminates after 60s idle"/>
+                        <TextBlock Text="🛡️ Inviolability Shield Active" Foreground="#00E676" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <!-- Bottom-Right Resize Grip Handle -->
+                    <Grid Grid.Column="2" 
+                          Width="16" 
+                          Height="16" 
+                          Cursor="SizeNWSE" 
+                          Background="Transparent" 
+                          VerticalAlignment="Bottom"
+                          HorizontalAlignment="Right"
+                          ToolTip="Drag to resize window"
+                          MouseLeftButtonDown="ResizeGrip_MouseLeftButtonDown">
+                        <Path Data="M 12,2 L 14,2 L 14,4 Z M 8,6 L 14,6 L 14,8 L 8,8 Z M 4,10 L 14,10 L 14,12 L 4,12 Z" 
+                              Fill="#444444" 
+                              Stretch="Uniform" 
+                              HorizontalAlignment="Right" 
+                              VerticalAlignment="Bottom" 
+                              Margin="0,0,1,1"/>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- Edge Resize Handles (Right & Bottom) -->
+            <Rectangle Grid.RowSpan="4" HorizontalAlignment="Right" Width="5" Cursor="SizeWE" Fill="Transparent" MouseLeftButtonDown="ResizeRight_MouseLeftButtonDown"/>
+            <Rectangle Grid.Row="3" VerticalAlignment="Bottom" Height="5" Cursor="SizeNS" Fill="Transparent" MouseLeftButtonDown="ResizeBottom_MouseLeftButtonDown"/>
+        </Grid>
+    </Border>
+</Window>

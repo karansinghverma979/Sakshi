@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>Apex</AssemblyName>
+    <RootNamespace>Apex</RootNamespace>
+    <ApplicationTitle>Apex</ApplicationTitle>
+    <Version>2.0.0</Version>
+    <Authors>Karan Singh Verma</Authors>
+    <Description>DirectX GPU-Accelerated Virtual Desktop &amp; Z-Order (Topmost) Controller for Windows 11</Description>
+    <ApplicationIcon>Assets\Apex.ico</ApplicationIcon>
+    <!-- Strictly prevent any background dotnet/Roslyn daemons from lingering -->
+    <UseSharedCompilation>false</UseSharedCompilation>
+    <BuildServerMode>false</BuildServerMode>
+    <!-- Omit debug symbols (.pdb) from release outputs to keep ~/.local/bin clean -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Apex.ico" />
+    <Resource Include="Assets\Apex.png" />
+  </ItemGroup>
+
+</Project>
