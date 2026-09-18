@@ -5,7 +5,12 @@
 
 Sakshi follows a strict decoupled, modular architecture:
 1. **The Host (Sakshi)**: Serves as the overarching platform, orchestrator, and registry of behavioral supervisors.
-2. **Modules (`Modules/<ModuleName>/`)**: Independent, sovereign disciplinary modules engineered for specific interventions (e.g., `Death`, `Drift`, `Posture`, `Sentry`).
+2. **Modules (`Modules/<ModuleName>/`)**: Independent, sovereign disciplinary modules engineered for specific interventions:
+   - `Death` (v1.0.0): AMOLED countdown lockdown & keyboard hook (.NET 9 WPF).
+   - `Overviews` (v2.0.0): Instant AI Overview sentry & full-screen enforcement (.NET 9 WinExe).
+   - `Apex` (v3.0.0): DirectX GPU-accelerated Virtual Desktop & Z-Order switchboard HUD (.NET 9 WPF).
+   - `Spark` (v4.0.0): Sub-10ms native Rust thought capture HUD & Markdown stream (Rust LLVM).
+   - `Drift`, `Posture`, `Sentry`: Reserved upcoming supervisors.
 
 ---
 
@@ -17,9 +22,9 @@ Sakshi follows a strict decoupled, modular architecture:
 - Idle resource consumption must remain strictly **0 MB RAM** and **0.0% CPU**. Processes spin up instantly on trigger, enforce their intervention, and terminate completely upon acknowledgment.
 
 ### 2. 🚀 Standalone Single-File Binary Invariant (`~/.local/bin`)
-- All compiled executable modules must deploy as standalone, self-contained single-file binaries directly into `~/.local/bin/` (e.g., `~/.local/bin/Death.exe`).
+- All compiled executable modules must deploy as standalone, self-contained single-file binaries directly into `~/.local/bin/` (e.g., `~/.local/bin/Death.exe`, `~/.local/bin/Spark.exe`).
 - Do not rely on intermediate wrapper scripts (`.cmd`, `.bat`) when direct binary execution via `%PATH%` is available.
-- Disable debug symbols in release builds (`<DebugType>none</DebugType>`, `<DebugSymbols>false</DebugSymbols>`) to ensure zero `.pdb` residue.
+- Disable debug symbols in release builds (`<DebugType>none</DebugType>` in .NET, `strip = true` in Rust) to ensure zero `.pdb` residue.
 
 ### 3. 🛡️ Unescapable Focus & Lockdown Sovereignty
 - Fullscreen intervention windows must be hardware-accelerated WPF (DirectX), topmost, borderless, and maximized.
