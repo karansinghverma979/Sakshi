@@ -1,188 +1,166 @@
-
-</strong>
 # <strong><a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Impact&weight=900&size=50&duration=2500&pause=500&color=FF4500&center=true&vCenter=true&width=800&height=80&lines=☠️+MEMENTO+MORI+☠️;⌚+REMEMBER+THAT+YOU+MUST+DIE+⌚;⌛+YOUR+DAYS+ARE+NUMBERED+⌛" alt="Memento Mori" /></a></strong>
 
-<br><br>
-
-
 <p align="center">
-  <img src="sakshi_banner.jpg" alt="Sakshi Banner" width="100%"/>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/SYSTEM-ACTIVE%20OVERWATCH-red?style=for-the-badge&logo=powershell&logoColor=white" alt="Status"/>
-  <img src="https://img.shields.io/badge/SECURITY-LEVEL%205-black?style=for-the-badge" alt="Clearance"/>
-  <img src="https://img.shields.io/badge/PORTABILITY-ZERO%20DEPENDENCY-blue?style=for-the-badge" alt="Portability"/>
-  <img src="https://img.shields.io/badge/PLATFORM-WINDOWS-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Platform"/>
+  <img src="https://img.shields.io/badge/CORE-.NET%209%20WPF-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 9"/>
+  <img src="https://img.shields.io/badge/MEMORY-0%20MB%20IDLE-brightgreen?style=for-the-badge" alt="0 MB Idle"/>
+  <img src="https://img.shields.io/badge/LATENCY-%3C40ms%20INSTANT-red?style=for-the-badge" alt="Latency"/>
+  <img src="https://img.shields.io/badge/STANDALONE-~%2F.local%2Fbin-blue?style=for-the-badge" alt="Path"/>
+  <img src="https://img.shields.io/badge/PLATFORM-WINDOWS%2011-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Platform"/>
 </p>
 
 ---
 
 > [!IMPORTANT]
 > **"Memento Mori. Remember that you must die."**
-> Sakshi is a cold, logical, and absolute behavior-enforcement daemon designed to run silently on your machine. Its purpose is simple: to counter cognitive entropy, procrastination, and the wasting of digital potential. It treats the human user as fallible, and the system as the absolute enforcer of temporal discipline.
+> An autonomous, hardware-accelerated disciplinary enforcement system engineered for Windows 11. It combats cognitive entropy and digital distraction through unescapable, high-velocity *Memento Mori* lockdowns with zero background daemon overhead.
 
 ---
 
 ## 👁️ System Architecture & Workflow
 
-Sakshi operates on a decoupled command-and-control design. The central command coordinates the timeline, while dedicated payload modules execute behavioral interventions.
+The system operates on a decoupled, zero-overhead architecture. Windows Task Scheduler acts as the native 0-RAM kernel clock, while the standalone compiled **Death** module delivers a sub-40ms fullscreen takeover.
 
-```mermaid
-graph TD
-    A[Logon Trigger] -->|Launch| B[Sakshi.ps1 Command Loop]
-    B -->|Stealth Mode: Hide Console| C[Eternal Observation Loop]
-    C -->|Wait 30 Mins| D{Temporal Trigger?}
-    D -->|Yes: :00 or :30| E[Invoke Death Module]
-    D -->|No| F[Heartbeat Sleep 5s]
-    F --> C
-    E -->|Execute| G[Death.ps1 WPF UI]
-    G -->|Mute Sound| H[WASAPI System Audio Takeover]
-    G -->|Tick-Tock Sound| I[Synchronous PCM Wave Tones]
-    G -->|60s Blocker| J[Countdown Phase]
-    J -->|Alt+F4 Intercepted| K[Force Confrontation]
-    K -->|Query Registry & Move Window| L[Active Desktop Snapping]
-    L -->|Reveal Button| M[User Acknowledgement]
-    M -->|Unmute Sound| N[Restore Audio State & Close]
+```text
+┌───────────────────────────────────────────────────────────┐
+│              Windows Task Scheduler (Kernel Clock)        │
+│  - Task: Death (or custom)                                │
+│  - Interval: Configurable (e.g. 15, 17, 20, 30, 45, 60m)  │
+│  - Idle Footprint: 0 MB RAM / 0% CPU                      │
+│  - Sleep Skip: Missed triggers while asleep are ignored   │
+└─────────────────────────────┬─────────────────────────────┘
+                              │ Scheduled repetition OR manual CLI `Death`
+                              ▼
+┌───────────────────────────────────────────────────────────┐
+│             Death.exe (~/.local/bin/Death.exe)            │
+│                                                           │
+│  1. 4-Tier Media Freeze: Pauses YouTube, Spotify, VLC     │
+│  2. WASAPI Audio Takeover: Low-level session mute         │
+│  3. In-Memory PCM Synth: Calibrated 1800/1500Hz tick-tock │
+│  4. DirectX OLED Lockdown: Topmost, borderless fullscreen │
+│  5. Anti-Escape & Desktop Snap: IVirtualDesktopManager    │
+│  6. Release: 1 resonant chime, quote unlock, unmute audio │
+└─────────────────────────────┬─────────────────────────────┘
+                              │
+                              ▼
+              Process exits -> RAM drops back to 0 MB
 ```
 
 ---
 
-## 🛠️ Technology Stack & Mechanisms
-
-Sakshi is built natively on Windows system interfaces, utilizing the following core technologies:
-
-| Category | Component | Description |
-| :--- | :--- | :--- |
-| **GUI Framework** | **WPF (XAML)** | Modeless WPF window execution loop managed by a custom `DispatcherFrame` thread message pump. Renders drop-shadow glow effect animations and pulse storyboards. |
-| **Audio Takeover** | **WASAPI COM API** | Direct interfaces to Windows Core Audio endpoints. Dynamically queries, mutes, and unmutes application sessions without touching the master volume. |
-| **Sound Synthesis** | **Win32 Multimedia** | Dynamically synthesizes pure sine wave PCM WAV streams in memory and plays them through the default sound card via native `winmm.dll` bindings. |
-| **Anti-Bypass Lock** | **COM Desktop Manager** | Uses `IVirtualDesktopManager` COM interface and Windows registry query (`HKCU:\SOFTWARE\...\VirtualDesktops`) to track active desktops and move the window dynamically. |
-| **Execution Loop** | **PowerShell Core / 5.1** | Lightweight script host executing coordinates and schedules without external dependencies. |
-
----
-
-## 🧠 Components Detail
-
-### 1. The Core Daemon: [Sakshi.ps1](file:///C:/Users/karan/Void/Sakshi/Sakshi.ps1)
-*   **Stealth Initialization**: Immediately invokes Win32 `ShowWindow` via pinvoke to hide its own console window, running silently in the background:
-    ```powershell
-    $window::ShowWindow((Get-Process -Id $PID).MainWindowHandle, 0)
-    ```
-*   **Observer Loop**: Runs an infinite loop checking system time every 5 seconds.
-*   **Intervention Intervals**: Dispatches the blocking *Death* payload exactly on the hour (`:00`) and the half-hour (`:30`).
-
-### 2. The Payload: [Modules/Death/Death.ps1](file:///C:/Users/karan/Void/Sakshi/Modules/Death/Death.ps1)
-The primary behavioral interceptor. When triggered, it locks down focus:
-
-*   **WASAPI Audio Mute Takeover**: Enumerates all active audio sessions on the current rendering endpoint. It ignores system alert sounds and the script's own process, but silences browsers (Edge, Chrome), media players (Windows Media Player), games, and music players.
-*   **PCM WAV Synthesizer**: Generates tick-tock mechanical sound effects at `1800Hz` and `1500Hz` directly into a memory buffer and plays them natively to bypass disabled PC speaker beep drivers:
-    ```csharp
-    [DllImport("winmm.dll", SetLastError = true, CharSet = CharSet.Auto)]
-    public static extern bool PlaySound(byte[] pszSound, IntPtr hmod, uint fdwSound);
-    ```
-*   **Active Desktop Snapping**: Periodically reads the active virtual desktop Guid from the registry and uses `IVirtualDesktopManager` to move the window. If the user attempts to escape by switching desktops, the window instantly snaps onto the new active desktop:
-    ```csharp
-    _desktopManager.MoveWindowToDesktop(hWnd, ref currentDesktopGuid);
-    ```
-*   **Focus Lockdown**: Intercepts `Alt + F4`, window deactivation, and cursor escapes. The close button is hidden and disabled until the 60-second countdown finishes.
-*   **Winding-Down Chimes**: Plays a three-tone rising chime (`1000Hz` $\rightarrow$ `1200Hz` $\rightarrow$ `1500Hz`) signaling completion, fades in the acknowledgement button, and cleanly restores all muted application volumes.
-
----
-
-## 🎨 WPF Visual Interface Specs
+## 🎨 Visual Interface & Atmosphere
 
 <img width="1600" height="1200" alt="d1" src="https://github.com/user-attachments/assets/abb654f9-9194-4336-9ddb-afa2e9f5d3ac" />
 
-
 > [!TIP]
 > The lockdown window uses rich aesthetics designed to command attention and feel premium:
-*   **Deep Dark Backdrop**: Pure `#000000` solid background with a blurry, semi-transparent (`Opacity="0.25"`) overlay that rotates randomized visual slides from the `Visuals/` directory.
-*   **Drop-Shadow Header Glow**: Pulsating red typography (`💀MEMENTO MORI💀`) driven by a Storyboard animation shifting the blur radius between `20` and `60` dynamically.
-*   **Urgency Display**: Center-staged timer fading from dark maroon to blood red as the clock winds down.
-*   **Glow Button Style**: Fades in a custom drop-shadow button featuring your personalized study quote.
+> * **Deep Dark Backdrop**: Pure `#000000` solid background with a high-contrast focus state.
+> * **Drop-Shadow Header Glow**: Pulsating red typography (`💀MEMENTO MORI💀`) driven by a Storyboard animation shifting the blur radius between `20` and `60` dynamically.
+> * **Urgency Display**: Center-staged timer fading from dark maroon to blood red as the clock winds down.
+> * **Glow Button Style**: Fades in a custom drop-shadow button featuring your personalized study quote.
 
 <img width="1600" height="1200" alt="d2" src="https://github.com/user-attachments/assets/2c97923b-adb2-46f4-82be-328e06b04c59" />
 
 ---
 
-## 🔧 Deployment & Shell Management Control
+## 🛠️ Technology Stack & Mechanisms
 
-Sakshi is fully portable and operates directly via Windows Task Scheduler. Here are the configuration details and PowerShell/CMD commands to inspect, manage, and monitor the daemon:
-
-### 📥 1. Installation Inputs (`Install-Service.ps1`)
-When you launch the installer as Administrator, it will guide you through two configuration prompts:
-*   **Scheduled Task Name**: Assigns a custom name for the Windows scheduled service. *(Press `Enter` to use the default task name: `Sakshi`)*
-*   **Acknowledgment Quote**: Overwrites the default focus quote. The input string is automatically encoded in UTF-8 and saved to [Modules/Death/quote.txt](file:///C:/Users/karan/Void/Sakshi/Modules/Death/quote.txt) to be rendered on the final unlock button. *(Press `Enter` to use the default quote: `KEEP CALM AND STUDY HARD.`)*
-
-### 📤 2. Uninstallation Inputs (`Uninstall-Service.ps1`)
-When removing the service, the script will request:
-*   **Task Name to Remove**: Specifies which task registry to stop and purge. *(Press `Enter` to target the default task: `Sakshi`)*
-
----
-
-### 💻 3. Command Line Control (PowerShell & CMD)
-
-#### A. PowerShell Commands (Run as Administrator)
-*   **Get Current Status & Detail**:
-    ```powershell
-    Get-ScheduledTask -TaskName "Sakshi"
-    ```
-*   **Start the Observer Daemon**:
-    ```powershell
-    Start-ScheduledTask -TaskName "Sakshi"
-    ```
-*   **Stop the Running Daemon**:
-    ```powershell
-    Stop-ScheduledTask -TaskName "Sakshi"
-    ```
-*   **Enable/Disable the Task**:
-    ```powershell
-    Enable-ScheduledTask -TaskName "Sakshi"
-    Disable-ScheduledTask -TaskName "Sakshi"
-    ```
-
-#### B. Command Prompt / CMD Commands (Run as Administrator)
-*   **Query Task Status**:
-    ```cmd
-    schtasks /query /tn "Sakshi"
-    ```
-*   **Execute / Run Task**:
-    ```cmd
-    schtasks /run /tn "Sakshi"
-    ```
-*   **Terminate Task**:
-    ```cmd
-    schtasks /end /tn "Sakshi"
-    ```
-*   **Delete Task Manually**:
-    ```cmd
-    schtasks /delete /tn "Sakshi" /f
-    ```
+| Component | Technology | Description |
+| :--- | :--- | :--- |
+| **Runtime Core** | **.NET 9 (WPF)** | Standalone single-file binary (`Death.exe`) compiled for `win-x64` with sub-40ms startup. |
+| **Media Freeze** | **WinRT GSMTC + Win32** | 4-tier media pause (GSMTC, `WM_APPCOMMAND`, `VK_MEDIA_PLAY_PAUSE`, and `VK_SPACE`) pausing browsers, Spotify, and VLC. |
+| **Audio Isolation** | **WASAPI COM Interop** | Low-level Core Audio endpoint enumeration muting background apps while exempting internal audio. |
+| **Sound Synthesis** | **Win32 Multimedia (PCM)** | Synthesizes mechanical clock ticks directly in memory; volume calibrated subtly below ambient audio. |
+| **Chime Release** | **Single Resonant Chime** | Pure 1200Hz single-tone chime signaling session unlock. |
+| **Anti-Escape** | **COM Desktop Manager** | Uses `IVirtualDesktopManager` to follow active virtual desktops and enforce topmost focus without flicker. |
+| **Scheduler** | **Windows Task Scheduler** | Native repetition trigger eliminating persistent 24/7 background daemon processes. |
 
 ---
 
-## 🧬 Git Configuration
+## 📁 Repository Structure
 
-The repository is configured to exclude temporary files, telemetry logs, and diagnostic files. To publish the repository:
+```text
+C:\Users\karan\Void\Sakshi\
+├── Modules/
+│   └── Death/                        # 💀 Core Death Module Source
+│       ├── Death.csproj              # .NET 9 WPF project definition
+│       ├── app.manifest              # PerMonitorV2 high-DPI scaling manifest
+│       ├── App.xaml / App.xaml.cs    # App entry, CLI flags & single-instance mutex
+│       ├── MainWindow.xaml / .cs     # OLED black UI, animations, focus enforcement
+│       ├── AudioEngine.cs            # WASAPI COM, GSMTC pause, PCM wave synth
+│       ├── The Whistle of Death.mp3  # Embedded ambient background audio
+│       ├── Death.cmd                 # CMD shell wrapper for synchronous terminal calls
+│       ├── Install-Death.ps1         # 🛠️ Builds Death.exe & registers Death task
+│       └── Uninstall-Death.ps1       # 🧹 Eradicates scheduled task, processes, and binaries
+│
+├── Sakshi.ps1                        # 🧠 Future Master Orchestrator (Standby Blueprint)
+├── .gitignore                        # Git rules (ignores bin/, obj/, dist/, logs)
+└── README.md                         # Documentation
+```
 
-```bash
-# Initialize and link to GitHub
-git init
-git remote add origin git@github.com:karansinghverma979/Sakshi.git
+---
 
-# Stage and commit clean files
-git add .
-git commit -m "Initialize Genesis Overwatch Daemon v3.0"
+## 🚀 Installation & Registration
 
-# Push to primary branch
-git branch -M main
-git push -u origin main
+Run the deployment script from PowerShell:
+
+```powershell
+.\Modules\Death\Install-Death.ps1
+```
+
+Or pass parameters directly for non-interactive automated deployment:
+
+```powershell
+.\Modules\Death\Install-Death.ps1 -TaskName "Death" -IntervalMinutes 30 -Quote "KEEP CALM AND STUDY HARD." -NonInteractive
+```
+
+### What the installer does:
+1. **Pre-checks**: Verifies .NET 9 SDK, source code, and target directories.
+2. **Path Setup**: Ensures `~/.local/bin` is in User `PATH`.
+3. **Pre-actions**: Terminates active instances, purges old binaries, and cleans previous tasks.
+4. **Build**: Compiles `Death.exe` into a single-file binary at `~/.local/bin/Death.exe`.
+5. **Scheduler**: Registers the task with **Sleep Skip** (`StartWhenAvailable = $false`) consuming **0 MB RAM** while idle. The quote is manifested directly as an action parameter (`--quote "..."`), requiring **zero** disk text files.
+
+---
+
+## 💻 Standalone Command Line Usage
+
+Since `~/.local/bin` is in `$env:PATH`, you can launch the Death module anytime from any terminal:
+
+```powershell
+# Display CLI help manual
+Death --help
+Death -h
+
+# Launch default 60-second lockdown
+Death
+
+# Quick 3-second smoke test
+Death --test
+
+# Launch with a custom duration (e.g. 15 seconds)
+Death --seconds 15
+
+# Launch with an on-the-fly custom quote
+Death --quote "STAY DISCIPLINED. NO EXCUSES."
+```
+
+---
+
+## 🧹 Complete Deregistration & Purge
+
+To completely remove the scheduled task, halt processes, and purge installed binaries:
+
+```powershell
+.\Modules\Death\Uninstall-Death.ps1
+```
+
+To preserve the compiled `Death.exe` binary in `~/.local/bin/` while removing the automatic schedule:
+
+```powershell
+.\Modules\Death\Uninstall-Death.ps1 -KeepBinary
 ```
 
 ---
 
 *   **Architect:** Karan Singh Verma
-*   **System Version:** 3.0.0 (Production Build)
-
-  
+*   **System Version:** 4.0.0 (Native .NET 9 Standalone Release)

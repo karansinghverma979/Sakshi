@@ -1,0 +1,121 @@
+<Window x:Class="Sakshi.Death.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DEATH"
+        WindowState="Maximized" WindowStyle="None" Topmost="True"
+        ShowInTaskbar="True" ResizeMode="NoResize"
+        Background="#000000"
+        KeyDown="Window_KeyDown"
+        Closing="Window_Closing"
+        Deactivated="Window_Deactivated"
+        StateChanged="Window_StateChanged"
+        Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <Storyboard x:Key="HeaderPulseAnimation">
+            <DoubleAnimation Storyboard.TargetName="HeaderGlow" 
+                             Storyboard.TargetProperty="BlurRadius" 
+                             From="25" To="55" Duration="0:0:3" 
+                             AutoReverse="True" RepeatBehavior="Forever" />
+        </Storyboard>
+
+        <Storyboard x:Key="ButtonPulseAnimation">
+            <DoubleAnimation Storyboard.TargetName="AcceptButton" 
+                             Storyboard.TargetProperty="Opacity" 
+                             From="0.7" To="1.0" Duration="0:0:1.5" 
+                             AutoReverse="True" RepeatBehavior="Forever" />
+        </Storyboard>
+
+        <Style x:Key="GlowButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#150000" />
+            <Setter Property="Foreground" Value="#FF2222" />
+            <Setter Property="BorderBrush" Value="#880000" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="FontFamily" Value="Constantia, Georgia, 'Segoe UI Variable Display', serif"/>
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="28,10" />
+            <Setter Property="MaxWidth" Value="900" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="ButtonBorder" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#FF0000" BlurRadius="16" ShadowDepth="0" Opacity="0.8"/>
+                            </Border.Effect>
+                            <TextBlock Text="{TemplateBinding Content}" 
+                                       TextWrapping="Wrap" 
+                                       TextAlignment="Center" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontWeight="{TemplateBinding FontWeight}"
+                                       Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#350000" />
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#FF2222" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#500000" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="#000000">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            
+            <!-- Pulsing Header -->
+            <Viewbox MaxWidth="1400" HorizontalAlignment="Center">
+                <TextBlock Text="💀 MEMENTO MORI 💀" 
+                           FontFamily="Constantia, Georgia, 'Segoe UI Variable Display', serif" 
+                           FontSize="120" FontWeight="Bold" 
+                           Foreground="#FF1E1E" TextAlignment="Center">
+                    <TextBlock.Effect>
+                        <DropShadowEffect x:Name="HeaderGlow" Color="#FF1E1E" BlurRadius="30" ShadowDepth="0" Opacity="1"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+            </Viewbox>
+
+            <!-- Solemn Subtitle -->
+            <TextBlock Text="Remember That You Must Die." 
+                       FontFamily="Constantia, Georgia, 'Segoe UI Variable Display', serif" 
+                       FontSize="70" Foreground="#CC1111" FontWeight="Bold" 
+                       TextAlignment="Center" Margin="0,35,0,70">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="12" ShadowDepth="4"/>
+                </TextBlock.Effect>
+            </TextBlock>
+
+            <!-- Countdown / Acknowledgment Button Container -->
+            <Grid MinWidth="600" MinHeight="140">
+                <TextBlock x:Name="CountdownDisplay" Text="60" 
+                           FontFamily="Constantia, Georgia, 'Segoe UI Variable Display', serif" 
+                           FontSize="110" Foreground="#440000" FontWeight="Bold" 
+                           TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="0"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+                
+                <Button x:Name="AcceptButton" Content=" KEEP CALM AND STUDY HARD. " 
+                        Style="{StaticResource GlowButtonStyle}" 
+                        Visibility="Collapsed" 
+                        VerticalAlignment="Center" HorizontalAlignment="Center" 
+                        Click="AcceptButton_Click" />
+            </Grid>
+
+        </StackPanel>
+    </Grid>
+</Window>

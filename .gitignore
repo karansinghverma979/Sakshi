@@ -26,3 +26,12 @@ Modules/Death/quote.txt
 
 # Local custom visual files
 Modules/Death/Visuals/
+
+# .NET Build Outputs & Binaries
+**/bin/
+**/obj/
+dist/
+*.exe
+*.dll
+*.pdb
+
