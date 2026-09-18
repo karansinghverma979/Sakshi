@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="DEATH"
         WindowState="Maximized" WindowStyle="None" Topmost="True"
-        ShowInTaskbar="True" ResizeMode="NoResize"
+        ShowInTaskbar="False" ResizeMode="NoResize"
         Background="#000000"
         KeyDown="Window_KeyDown"
         Closing="Window_Closing"

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -75,7 +76,13 @@ namespace Sakshi.Death
             // 4. Initial Topmost Activation
             AudioEngine.EnforceTopmost(_windowHandle);
 
-            // 5. If countdown is <= 0 (e.g. Snapshot mode), reveal button immediately
+            // 5. Enforce Inescapable Low-Level Keyboard Lockdown (swallows Win, Alt+Tab, Alt+F4)
+            if (_secondsRemaining > 0)
+            {
+                InstallKeyboardHook();
+            }
+
+            // 6. If countdown is <= 0 (e.g. Snapshot mode), reveal button immediately
             if (_secondsRemaining <= 0)
             {
                 _countdownTimer.Stop();
@@ -170,6 +177,7 @@ namespace Sakshi.Death
             {
                 // Countdown Finished
                 _countdownTimer.Stop();
+                UninstallKeyboardHook();
 
                 // 1. Play 1 single release chime (1200Hz, 1 time only)
                 AudioEngine.PlaySingleEndChime();
@@ -296,6 +304,7 @@ namespace Sakshi.Death
 
         private void CleanUpAudioAndState()
         {
+            UninstallKeyboardHook();
             _countdownTimer.Stop();
             _focusTimer.Stop();
 
@@ -319,5 +328,92 @@ namespace Sakshi.Death
                 try { File.Delete(_tempAudioPath); } catch { }
             }
         }
+
+        #region --- LOW-LEVEL SYSTEM KEYBOARD HOOK ---
+        private const int WH_KEYBOARD_LL = 13;
+        private const int VK_TAB = 0x09;
+        private const int VK_ESCAPE = 0x1B;
+        private const int VK_F4 = 0x73;
+        private const int VK_LWIN = 0x5B;
+        private const int VK_RWIN = 0x5C;
+        private const int VK_APPS = 0x5D;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct KBDLLHOOKSTRUCT
+        {
+            public uint vkCode;
+            public uint scanCode;
+            public uint flags;
+            public uint time;
+            public IntPtr dwExtraInfo;
+        }
+
+        private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr GetModuleHandle(string? lpModuleName);
+
+        private LowLevelKeyboardProc? _keyboardProc;
+        private IntPtr _hookId = IntPtr.Zero;
+
+        private void InstallKeyboardHook()
+        {
+            if (_hookId != IntPtr.Zero) return;
+            _keyboardProc = HookCallback;
+            using var curProcess = Process.GetCurrentProcess();
+            using var curModule = curProcess.MainModule;
+            _hookId = SetWindowsHookEx(WH_KEYBOARD_LL, _keyboardProc, GetModuleHandle(curModule?.ModuleName), 0);
+        }
+
+        private void UninstallKeyboardHook()
+        {
+            if (_hookId != IntPtr.Zero)
+            {
+                UnhookWindowsHookEx(_hookId);
+                _hookId = IntPtr.Zero;
+            }
+        }
+
+        private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            if (nCode >= 0 && _secondsRemaining > 0)
+            {
+                var hookStruct = Marshal.PtrToStructure<KBDLLHOOKSTRUCT>(lParam);
+                int vkCode = (int)hookStruct.vkCode;
+                bool isAlt = (hookStruct.flags & 0x20) != 0;
+
+                // 1. Block Windows Key (LWin / RWin) & Apps Key
+                // Completely prevents the Windows shell from opening Start Menu or unhiding taskbar!
+                if (vkCode == VK_LWIN || vkCode == VK_RWIN || vkCode == VK_APPS)
+                {
+                    return (IntPtr)1;
+                }
+
+                // 2. Block Alt+Tab, Alt+Esc, Alt+F4
+                if (isAlt && (vkCode == VK_TAB || vkCode == VK_ESCAPE || vkCode == VK_F4))
+                {
+                    return (IntPtr)1;
+                }
+
+                // 3. Block Ctrl+Esc (Opens Start Menu)
+                if (vkCode == VK_ESCAPE && (Keyboard.Modifiers & ModifierKeys.Control) != 0)
+                {
+                    return (IntPtr)1;
+                }
+            }
+
+            return CallNextHookEx(_hookId, nCode, wParam, lParam);
+        }
+        #endregion
     }
 }
