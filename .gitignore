@@ -35,11 +35,12 @@ Modules/Death/Visuals/
 scratch/
 temp/
 
-# .NET Build Outputs & Binaries
+# .NET & Rust Build Outputs & Binaries
 **/bin/
 **/obj/
 **/publish/
 **/dist/
+**/target/
 dist/
 *.exe
 *.dll
