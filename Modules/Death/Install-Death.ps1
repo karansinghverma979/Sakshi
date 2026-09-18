@@ -180,11 +180,6 @@ try {
         throw "Compilation completed, but $TargetExe was not found.`nBuild Log:`n$($BuildOutput -join "`n")"
     }
 
-    $CmdWrapper = Join-Path $PSScriptRoot "Death.cmd"
-    if (Test-Path $CmdWrapper) {
-        Copy-Item -Path $CmdWrapper -Destination (Join-Path $BinDir "Death.cmd") -Force
-    }
-
     $ExeSizeMB = [math]::Round(((Get-Item $TargetExe).Length / 1MB), 2)
     Write-Host " [SUCCESS] Compiled successfully: $TargetExe ($ExeSizeMB MB)" -ForegroundColor Green
 }

@@ -81,12 +81,11 @@ Write-Host "`n[3/3] Purging Death binaries and artifacts..." -ForegroundColor Cy
 
 $BinDir = Join-Path $env:USERPROFILE ".local\bin"
 $TargetExe = Join-Path $BinDir "Death.exe"
-$TargetCmd = Join-Path $BinDir "Death.cmd"
 $LegacyExe = Join-Path $BinDir "death.exe"
 $ResidualQuote = Join-Path $BinDir "quote.txt"
 
 if (-not $KeepBinary) {
-    foreach ($file in @($TargetExe, $TargetCmd, $LegacyExe, $ResidualQuote)) {
+    foreach ($file in @($TargetExe, $LegacyExe, $ResidualQuote)) {
         if (Test-Path $file) {
             try {
                 Remove-Item -Path $file -Force -ErrorAction SilentlyContinue
