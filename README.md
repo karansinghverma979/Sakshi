@@ -107,52 +107,21 @@ Manage the entire suite of 4 modules directly from the central orchestrator:
 
 ```text
 Sakshi/
+├── .gitattributes                 # LF/CRLF normalization firewall
 ├── .gitignore                    # Hardened Git exclusions
-├── GEMINI.md                     # Autonomous repository guidelines & invariants
+├── .github/                      # OpenSSF CI & Dependabot governance
+│   ├── dependabot.yml
+│   └── workflows/ci.yml
+├── GEMINI.md                     # Autonomous platform guidelines & invariants
 ├── LICENSE                       # MIT License
 ├── README.md                     # Master platform documentation
 ├── Release.md                    # Master release roadmap & version ledger
 ├── Release-1.md                  # Sakshi v1.0.0 Engineering Dossier (Death)
 ├── Release-2.md                  # Sakshi v2.0.0 Engineering Dossier (Overviews)
 ├── Release-3.md                  # Sakshi v3.0.0 Engineering Dossier (Apex)
-├── Sakshi.ps1                    # Platform supervisory orchestrator (standby)
-└── Modules/
-    ├── Death/                    # 💀 Death (Memento Mori) Disciplinary Engine
-    │   ├── README.md             # Sovereign module documentation
-    │   ├── Death.csproj          # .NET 9 WPF single-file project configuration
-    │   ├── app.manifest          # PerMonitorV2 DPI awareness manifest
-    │   ├── App.xaml / .cs        # Entry point, single-instance mutex & CLI flags
-    │   ├── MainWindow.xaml / .cs # AMOLED interface, keyboard hook & animations
-    │   ├── AudioEngine.cs        # WASAPI isolation, GSMTC pause & PCM synth
-    │   ├── The Whistle of Death.mp3 # Embedded atmospheric background audio
-    │   ├── Install-Death.ps1     # Automated compiler & Task Scheduler installer
-    │   ├── Uninstall-Death.ps1   # Task deregistration and cleanup script
-    │   └── assets/               # Real UI screenshots (countdown & unlocked states)
-    ├── Overviews/                # 👁️ Overviews (Google AI Overview Sentry)
-    │   ├── README.md             # Sovereign module documentation
-    │   ├── Overviews.csproj      # .NET 9 WinExe single-file project configuration
-    │   ├── app.manifest          # PerMonitorV2 DPI awareness manifest
-    │   ├── Program.cs            # Zero-daemon instant WebApp launcher (<15ms)
-    │   ├── Install-Overviews.ps1 # Workstation compiler & triad packager
-    │   ├── Uninstall-Overviews.ps1 # Clean teardown & vanish script
-    │   ├── Overviews_SelfContained_Setup.ps1 # Universal PS5.1/7+ GitHub fetcher
-    │   ├── Setup/                # Self-contained offline setup wizard project
-    │   └── assets/               # Custom multi-res application icons (.ico / .png)
-    ├── Apex/                     # ⚡ Apex (Virtual Desktop & Z-Order Controller)
-    │   ├── README.md             # Sovereign module documentation
-    │   ├── Apex.csproj           # .NET 9 WinExe single-file project configuration
-    │   ├── App.xaml / .cs        # Entry point & single-instance message broker
-    │   ├── MainWindow.xaml / .cs # AMOLED switchboard HUD, geometry memory & search
-    │   ├── Install-Apex.ps1      # Workstation compiler & shortcut installer
-    │   ├── Uninstall-Apex.ps1    # Clean teardown & vanish script
-    │   ├── Core/                 # Blacklist, COM VirtualDesktop & Win32 window manager
-    │   └── Assets/               # Application icons & visual showcase screenshots
-    └── Spark/                    # ⚡ Spark (Ephemeral Thought Capture HUD)
-        ├── README.md             # Sovereign module documentation
-        ├── Cargo.toml            # Rust manifest, dependencies & release profile
-        ├── Install-Spark.ps1     # Native Rust compiler & Ctrl+Alt+S installer
-        ├── Uninstall-Spark.ps1   # Clean teardown and shortcut remover
-        └── src/                  # Native Rust source (main, editor, storage, theme)
+├── Release-4.md                  # Sakshi v4.0.0 Engineering Dossier (Spark)
+├── Sakshi.ps1                    # Sovereign master orchestrator switchboard
+└── SECURITY.md                   # OpenSSF coordinated vulnerability disclosure
 ```
 
 ---

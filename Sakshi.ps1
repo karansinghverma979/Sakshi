@@ -57,9 +57,12 @@ function Invoke-InstallAll {
     
     $moduleDirs = @("Death", "Overviews", "Apex", "Spark")
     foreach ($m in $moduleDirs) {
-        $installScript = Join-Path $PSScriptRoot "Modules\$m\Install-$m.ps1"
+        $siblingDir = Join-Path $root $m
+        $installScript = Join-Path $siblingDir "Install-$m.ps1"
+
         if (-not (Test-Path $installScript)) {
-            $installScript = Join-Path $root "$m\Install-$m.ps1"
+            Write-Host " [·] Sibling repository not found. Fetching $m from GitHub..." -ForegroundColor DarkYellow
+            git clone "https://github.com/karansinghverma979/$m.git" $siblingDir
         }
 
         if (Test-Path $installScript) {
@@ -78,10 +81,8 @@ function Invoke-UninstallAll {
     
     $moduleDirs = @("Death", "Overviews", "Apex", "Spark")
     foreach ($m in $moduleDirs) {
-        $uninstallScript = Join-Path $PSScriptRoot "Modules\$m\Uninstall-$m.ps1"
-        if (-not (Test-Path $uninstallScript)) {
-            $uninstallScript = Join-Path $root "$m\Uninstall-$m.ps1"
-        }
+        $siblingDir = Join-Path $root $m
+        $uninstallScript = Join-Path $siblingDir "Uninstall-$m.ps1"
 
         if (Test-Path $uninstallScript) {
             Write-Host " Removing $m..." -ForegroundColor DarkGray
