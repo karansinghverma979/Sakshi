@@ -1,0 +1,29 @@
+﻿name: 🐛 Bug Report
+description: File a bug report to help us improve
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report an issue!
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Exact steps to reproduce the behavior.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS version, runtime version, etc.
+      placeholder: Windows 11 / PowerShell 7.4 / .NET 9
+    validations:
+      required: false

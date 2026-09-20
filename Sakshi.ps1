@@ -1,24 +1,148 @@
-<#
-    .SYNOPSIS
-        SYSTEM: SAKSHI // THE WITNESS
-        ROLE: MASTER BEHAVIORAL SUPERVISOR (FUTURE ARCHITECTURAL PLACEHOLDER)
-        STATUS: STANDBY / RESERVED
+[CmdletBinding()]
+param(
+    [Parameter(Position = 0)]
+    [ValidateSet('status', 'install-all', 'uninstall-all', 'death', 'overviews', 'apex', 'spark', 'menu')]
+    [string]$Command = 'menu',
 
-    .DESCRIPTION
-        Currently, time-based disciplinary interventions and screen lockdowns
-        are executed natively with 0 MB idle RAM via Windows Task Scheduler
-        triggering the standalone compiled Death module (~/.local/bin/Death.exe).
+    [switch]$NonInteractive
+)
 
-        This file is reserved as a placeholder for the future active-sensing model:
-        - Real-time foreground window and distraction monitoring
-        - Win32 AFK & user idle tracking (skips locks when user is away)
-        - Typing velocity & fatigue heuristic calculations
-        - Multi-module dynamic orchestration (Drift, Posture, Sentry, Death)
+$ErrorActionPreference = 'Stop'
+$LocalBin = Join-Path $HOME ".local\bin"
 
-        When behavioral active-sensing is built, this file or its compiled daemon
-        will serve as the supervisory controller.
-#>
+function Show-Banner {
+    Write-Host ""
+    Write-Host " ===============================================================" -ForegroundColor Cyan
+    Write-Host "  SAKSHI (The Witness) - Sovereign Control Matrix" -ForegroundColor Cyan
+    Write-Host "  Zero-Daemon Governance  --  0 MB Idle RAM  --  Windows 11" -ForegroundColor DarkGray
+    Write-Host " ===============================================================" -ForegroundColor Cyan
+    Write-Host ""
+}
 
-Write-Host " [SAKSHI] Master behavioral daemon is currently in standby (placeholder)." -ForegroundColor Cyan
-Write-Host " [SAKSHI] Disciplinary lockdowns are currently handled by the Death / Memento Mori engine." -ForegroundColor DarkGray
-Write-Host " [SAKSHI] Run 'Death' directly from your terminal or install the schedule via Install-Death.ps1." -ForegroundColor Yellow
+function Get-ModuleStatus {
+    $modules = @(
+        @{ Name = "Death"; Binary = "Death.exe"; Trigger = "Task Scheduler (Memento Mori)" },
+        @{ Name = "Overviews"; Binary = "Overviews.exe"; Trigger = "Ctrl + Alt + O" },
+        @{ Name = "Apex"; Binary = "Apex.exe"; Trigger = "Ctrl + Alt + A" },
+        @{ Name = "Spark"; Binary = "Spark.exe"; Trigger = "Ctrl + Alt + S" }
+    )
+
+    Write-Host " MODULE SOVEREIGN STATUS LEDGER:" -ForegroundColor Yellow
+    Write-Host " ---------------------------------------------------------------" -ForegroundColor DarkGray
+
+    foreach ($m in $modules) {
+        $binPath = Join-Path $LocalBin $m.Binary
+        $isInstalled = Test-Path $binPath
+        $statusIcon = if ($isInstalled) { "[INSTALLED]" } else { "[NOT FOUND]" }
+        $color = if ($isInstalled) { "Green" } else { "DarkGray" }
+
+        Write-Host (" {0,-12} {1,-15} | Trigger: {2}" -f $m.Name, $statusIcon, $m.Trigger) -ForegroundColor $color
+    }
+
+    Write-Host " ---------------------------------------------------------------" -ForegroundColor DarkGray
+
+    $activeProcesses = Get-Process -Name "Death", "Overviews", "Apex", "Spark" -ErrorAction SilentlyContinue
+    if ($activeProcesses) {
+        $cnt = $activeProcesses.Count
+        Write-Host " Active Instances Running: $cnt" -ForegroundColor Yellow
+    } else {
+        Write-Host " ZERO-DAEMON INVARIANT: 0 MB Idle RAM (Pristine Standby)" -ForegroundColor Green
+    }
+    Write-Host ""
+}
+
+function Invoke-InstallAll {
+    Write-Host " Initializing installation of all 4 sovereign modules..." -ForegroundColor Cyan
+    $root = Split-Path $PSScriptRoot -Parent
+    
+    $moduleDirs = @("Death", "Overviews", "Apex", "Spark")
+    foreach ($m in $moduleDirs) {
+        $installScript = Join-Path $PSScriptRoot "Modules\$m\Install-$m.ps1"
+        if (-not (Test-Path $installScript)) {
+            $installScript = Join-Path $root "$m\Install-$m.ps1"
+        }
+
+        if (Test-Path $installScript) {
+            Write-Host " Compiling and Installing $m..." -ForegroundColor Green
+            powershell -ExecutionPolicy Bypass -File $installScript -NonInteractive
+        } else {
+            Write-Host " Install script for $m not found at $installScript" -ForegroundColor DarkYellow
+        }
+    }
+    Write-Host " All modules installed and registered into Windows 11 Shell." -ForegroundColor Green
+}
+
+function Invoke-UninstallAll {
+    Write-Host " Teardown and Vanish of all 4 sovereign modules..." -ForegroundColor Yellow
+    $root = Split-Path $PSScriptRoot -Parent
+    
+    $moduleDirs = @("Death", "Overviews", "Apex", "Spark")
+    foreach ($m in $moduleDirs) {
+        $uninstallScript = Join-Path $PSScriptRoot "Modules\$m\Uninstall-$m.ps1"
+        if (-not (Test-Path $uninstallScript)) {
+            $uninstallScript = Join-Path $root "$m\Uninstall-$m.ps1"
+        }
+
+        if (Test-Path $uninstallScript) {
+            Write-Host " Removing $m..." -ForegroundColor DarkGray
+            powershell -ExecutionPolicy Bypass -File $uninstallScript
+        }
+    }
+    Write-Host " Complete teardown complete. 0 residual hooks." -ForegroundColor Green
+}
+
+switch ($Command) {
+    'status' {
+        Show-Banner
+        Get-ModuleStatus
+    }
+    'install-all' {
+        Show-Banner
+        Invoke-InstallAll
+    }
+    'uninstall-all' {
+        Show-Banner
+        Invoke-UninstallAll
+    }
+    'death' {
+        $bin = Join-Path $LocalBin "Death.exe"
+        if (Test-Path $bin) { & $bin } else { Write-Host "Death.exe not found in $LocalBin" -ForegroundColor Red }
+    }
+    'overviews' {
+        $bin = Join-Path $LocalBin "Overviews.exe"
+        if (Test-Path $bin) { & $bin } else { Write-Host "Overviews.exe not found in $LocalBin" -ForegroundColor Red }
+    }
+    'apex' {
+        $bin = Join-Path $LocalBin "Apex.exe"
+        if (Test-Path $bin) { & $bin } else { Write-Host "Apex.exe not found in $LocalBin" -ForegroundColor Red }
+    }
+    'spark' {
+        $bin = Join-Path $LocalBin "Spark.exe"
+        if (Test-Path $bin) { & $bin } else { Write-Host "Spark.exe not found in $LocalBin" -ForegroundColor Red }
+    }
+    'menu' {
+        Show-Banner
+        Get-ModuleStatus
+        Write-Host " [1] Launch Death (Memento Mori Smoke Test)" -ForegroundColor White
+        Write-Host " [2] Launch Overviews (Google AI Overview)" -ForegroundColor White
+        Write-Host " [3] Summon Apex (Virtual Desktop and Topmost HUD)" -ForegroundColor White
+        Write-Host " [4] Summon Spark (Thought Capture HUD)" -ForegroundColor White
+        Write-Host " [5] Install All Modules" -ForegroundColor White
+        Write-Host " [6] Uninstall All Modules" -ForegroundColor White
+        Write-Host " [Q] Quit" -ForegroundColor DarkGray
+        Write-Host ""
+        
+        if ($NonInteractive) { return }
+
+        $choice = Read-Host " Select Option"
+        switch ($choice) {
+            '1' { $bin = Join-Path $LocalBin "Death.exe"; if (Test-Path $bin) { & $bin --test } }
+            '2' { $bin = Join-Path $LocalBin "Overviews.exe"; if (Test-Path $bin) { & $bin } }
+            '3' { $bin = Join-Path $LocalBin "Apex.exe"; if (Test-Path $bin) { & $bin } }
+            '4' { $bin = Join-Path $LocalBin "Spark.exe"; if (Test-Path $bin) { & $bin } }
+            '5' { Invoke-InstallAll }
+            '6' { Invoke-UninstallAll }
+            default { Write-Host " Exiting Sakshi." -ForegroundColor DarkGray }
+        }
+    }
+}

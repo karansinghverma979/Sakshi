@@ -34,7 +34,7 @@ Sakshi follows a strict decoupled, modular architecture:
   - Multi-virtual-desktop tracking via COM `IVirtualDesktopManager`.
 
 ### 4. 🌐 Universal Relative & Portable Paths
-- Never hardcode absolute user directory paths (e.g. `C:\Users\karan\...`) into source code, scripts, configurations, or documentation.
+- Never hardcode absolute user directory paths (e.g. `C:\Users\<username>\...`) into source code, scripts, configurations, or documentation.
 - Always use relative paths (`./`, `../`) or dynamic environment variables (`~/.local/bin`, `%USERPROFILE%`, `[Environment]::GetFolderPath(...)`).
 
 ### 5. 🧹 Mandatory 4-Step Post-Work Cleanup Sweep

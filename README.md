@@ -40,12 +40,12 @@ Sakshi enforces strict separation of concerns. The host repository governs platf
 
 ## 📦 Disciplinary Modules Ledger
 
-| Module | Version | Status | Primary Capability | Documentation |
+| Module | Version | Status | Primary Capability | Sovereign Repository |
 | :--- | :--- | :--- | :--- | :--- |
-| **💀 Death** | **v1.0.0** | **`Active / Production`** | Unescapable AMOLED countdown lockdown, low-level Win32 keyboard hook (`WH_KEYBOARD_LL`), 4-tier media freeze, WASAPI audio isolation, and 0-RAM Task Scheduler trigger. | [**Death Module Dossier ➔**](Modules/Death/README.md) |
-| **👁️ Overviews** | **v2.0.0** | **`Active / Production`** | Instant Google AI Overview summoner, `Ctrl+Alt+O` native Explorer shortcut (0 MB RAM), Win32 `SW_MAXIMIZE` full-screen enforcement, and standalone setup installer & vanisher. | [**Overviews Module Dossier ➔**](Modules/Overviews/README.md) |
-| **⚡ Apex** | **v3.0.0** | **`Active / Production`** | DirectX GPU-accelerated Virtual Desktop & Z-Order (Topmost) switchboard HUD, `Ctrl+Alt+A` native Explorer shortcut (0 MB RAM), COM `IVirtualDesktopManager` discovery, and 1-minute auto-destruct. | [**Apex Module Dossier ➔**](Modules/Apex/README.md) |
-| **⚡ Spark** | **v4.0.0** | **`Active / Production`** | Sub-10ms native Rust ephemeral thought capture HUD, `Ctrl+Alt+S` native Explorer shortcut (0 MB RAM), Void Black (#0A0C10) auto-focused card, smart bullet engine, and atomic append-only stream (`~/.gemini/Spark.md`). | [**Spark Module Dossier ➔**](Modules/Spark/README.md) |
+| **💀 Death** | **v1.0.0** | **`Active / Production`** | Unescapable AMOLED countdown lockdown, low-level Win32 keyboard hook (`WH_KEYBOARD_LL`), 4-tier media freeze, WASAPI audio isolation, and 0-RAM Task Scheduler trigger. | [**Death Repo ➔**](https://github.com/karansinghverma979/Death) |
+| **👁️ Overviews** | **v2.0.0** | **`Active / Production`** | Instant Google AI Overview summoner, `Ctrl+Alt+O` native Explorer shortcut (0 MB RAM), Win32 `SW_MAXIMIZE` full-screen enforcement, and standalone setup installer & vanisher. | [**Overviews Repo ➔**](https://github.com/karansinghverma979/Overviews) |
+| **⚡ Apex** | **v3.0.0** | **`Active / Production`** | DirectX GPU-accelerated Virtual Desktop & Z-Order (Topmost) switchboard HUD, `Ctrl+Alt+A` native Explorer shortcut (0 MB RAM), COM `IVirtualDesktopManager` discovery, and 1-minute auto-destruct. | [**Apex Repo ➔**](https://github.com/karansinghverma979/Apex) |
+| **⚡ Spark** | **v4.0.0** | **`Active / Production`** | Sub-10ms native Rust ephemeral thought capture HUD, `Ctrl+Alt+S` native Explorer shortcut (0 MB RAM), Void Black (#0A0C10) auto-focused card, smart bullet engine, and atomic append-only stream (`~/.gemini/Spark.md`). | [**Spark Repo ➔**](https://github.com/karansinghverma979/Spark) |
 | **🧭 Drift** | — | `Planned` | Real-time foreground task misalignment and tab-paralysis detection. | *Reserved* |
 | **🧘 Posture** | — | `Planned` | Micro-break physical ergonomics and screen strain supervisor. | *Reserved* |
 | **🛡️ Sentry** | — | `Planned` | Win32 AFK tracker and idle-aware intervention coordinator. | *Reserved* |
@@ -66,7 +66,7 @@ Shipped in **Sakshi v4.0.0**, **Spark** is a sovereign native Rust thought captu
   <img src="Modules/Spark/Assets/Spark-HUD-Desktop.png" alt="Sakshi // Spark HUD" width="85%" />
 </p>
 
-👉 **For full documentation, shortcuts, and architecture, visit the [Spark Module README](Modules/Spark/README.md).**
+👉 **For full documentation, shortcuts, and architecture, visit the [Spark Repository](https://github.com/karansinghverma979/Spark).**
 
 ---
 
@@ -79,38 +79,26 @@ The flagship active module currently shipped in **Sakshi v1.0.0** is the standal
 * **Zero-RAM Hardware Scheduler**: Integrated directly with Windows Task Scheduler (`0 MB` idle RAM, `0%` idle CPU, Sleep-Skip enabled).
 * **Audio Synthesis & Media Freeze**: WinRT GSMTC media pausing with custom in-memory synthesized mechanical clock ticks.
 
-👉 **For full technical specifications, screenshots, and audio architecture, visit the [Death Module README](Modules/Death/README.md).**
+👉 **For full technical specifications, screenshots, and audio architecture, visit the [Death Repository](https://github.com/karansinghverma979/Death).**
 
 ---
 
-## 🚀 Quick Start (Death Module Deployment)
+## 🚀 30-Second Quickstart & Master Switchboard (`Sakshi.ps1`)
 
-### 1. One-Stroke Automated Installation
-From PowerShell in the repository root:
-
-```powershell
-# Interactive deployment
-.\Modules\Death\Install-Death.ps1
-
-# Automated silent deployment (Runs every 30 mins with custom quote)
-.\Modules\Death\Install-Death.ps1 -TaskName "Death" -IntervalMinutes 30 -Quote "KEEP CALM AND STUDY HARD." -NonInteractive
-```
-
-### 2. Standalone CLI Usage
-The installer compiles and deploys the binary to `~/.local/bin/Death.exe` (automatically added to `$env:PATH`):
+Manage the entire suite of 4 modules directly from the central orchestrator:
 
 ```powershell
-# Run default 60s lockdown
-Death
+# Launch interactive terminal matrix HUD
+.\Sakshi.ps1
 
-# Run quick 3-second smoke test
-Death --test
+# Inspect zero-daemon health & installed module ledger
+.\Sakshi.ps1 status
 
-# Run custom countdown
-Death --seconds 15
+# Install and configure all 4 sovereign modules at once
+.\Sakshi.ps1 install-all
 
-# Launch with dynamic custom quote
-Death --quote "DISCIPLINE EQUALS FREEDOM."
+# Complete teardown and vanish of all modules
+.\Sakshi.ps1 uninstall-all
 ```
 
 ---

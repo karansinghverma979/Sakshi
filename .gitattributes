@@ -1,0 +1,21 @@
+﻿# Auto detect text files and perform LF normalization
+* text=auto
+
+# Text files normalized with LF
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.ts text eol=lf
+*.js text eol=lf
+*.py text eol=lf
+*.rs text eol=lf
+*.cs text eol=lf
+
+# Force Unix LF for all shell scripts (prevents Windows CRLF syntax crash)
+*.sh text eol=lf
+
+# Windows scripts require CRLF
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
