@@ -1,105 +1,73 @@
-# 👁️ SAKSHI (साक्षी The Witness)
+# 👁️ SAKSHI (साक्षी // The Witness)
 
 <p align="center">
-  <img src="https://img.shields.io/badge/PLATFORM-WINDOWS%2011-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Platform"/>
-  <img src="https://img.shields.io/badge/ARCHITECTURE-.NET%209%20%26%20RUST-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 9 & Rust Modular"/>
-  <img src="https://img.shields.io/badge/IDLE%20RAM-0%20MB-brightgreen?style=for-the-badge" alt="0 MB Idle RAM"/>
-  <img src="https://img.shields.io/badge/ACTIVE%20MODULES-4%20PRODUCTION-orange?style=for-the-badge" alt="Active Modules"/>
+  <img src="https://img.shields.io/badge/STATUS-RESERVED%20%2F%20INDEX-inactive?style=for-the-badge" alt="Status"/>
+  <img src="https://img.shields.io/badge/ECOSYSTEM-WINDOWS%2011-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Platform"/>
+  <img src="https://img.shields.io/badge/ARCHITECTURE-DECOUPLED%20MICRO--ENGINES-512BD4?style=for-the-badge" alt="Decoupled Micro-Engines"/>
+  <img src="https://img.shields.io/badge/STANDALONE%20REPOS-4%20PRODUCTION-brightgreen?style=for-the-badge" alt="Production Repositories"/>
   <img src="https://img.shields.io/badge/LICENSE-MIT-blue?style=for-the-badge" alt="MIT License"/>
 </p>
 
 ---
 
-> [!IMPORTANT]
-> **"The unexamined machine is not worth computing on."**
-> **Sakshi (साक्षी // The Witness)** is an autonomous, hardware-accelerated cognitive supervisor and behavioral governance framework engineered for Windows 11. It eliminates digital distraction, context drift, and subconscious procrastination through decoupled, zero-overhead behavioral intervention modules.
+> [!NOTE]
+> **Repository Status: Architectural Blueprint & Umbrella Registry**
+>
+> Sakshi originally served as the incubator for Windows 11 cognitive governance and behavioral intervention utilities. **All active production modules have been graduated and decoupled into their own dedicated, sovereign GitHub repositories.**
+>
+> This repository is maintained as an **Index, Architectural Template, and Concept Anchor** for the ecosystem. It is not currently deployed in production. Active development and binary releases occur directly within the dedicated module repositories listed below.
 
 ---
 
-## 🏛️ Modular System Architecture
+## 🏛️ Ecosystem Architecture
 
-Sakshi enforces strict separation of concerns. The host repository governs platform orchestration, module lifecycle, and release specifications, while each disciplinary intervention runs as a dedicated, sovereign engine inside `Modules/`:
+Sakshi defines the overarching philosophy of the **zero-daemon invariant**: 0 MB idle RAM, 0% idle CPU, and instant on-demand execution via native Windows hotkeys and Task Scheduler triggers.
 
 ```text
-┌───────────────────────────────────────────────────────────┐
-│                 SAKSHI PLATFORM (THE WITNESS)             │
-│   - Behavioral governance, module lifecycle & scheduling  │
-│   - Zero-daemon invariant (0 MB idle RAM / 0% CPU)        │
-└─────────────────────────────┬─────────────────────────────┘
-                              │
-         ┌────────────────────┼────────────────────┐
-         ▼                    ▼                    ▼
-┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐
-│  Modules/Death/  │ │  Modules/Drift/  │ │ Modules/Posture/ │
-│  (Memento Mori)  │ │ (Context Guard)  │ │ (Ergonomics)     │
-│  STATUS: ACTIVE  │ │ STATUS: RESERVED │ │ STATUS: RESERVED │
-└──────────────────┘ └──────────────────┘ └──────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                 SAKSHI (साक्षी // THE WITNESS)              │
+│       Cognitive Governance Blueprint & Umbrella Index       │
+│              [Status: Reserved / Incubator]                 │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Decoupled into Sovereign Repositories
+         ┌─────────────────────┼─────────────────────┐
+         ▼                     ▼                     ▼
+┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+│   💀 Death       │  │   👁️ Overviews    │  │   ⚡ Apex        │
+│ Memento Mori     │  │ AI Search Sentry │  │ Desktop Switcher │
+│ (Active / .NET)  │  │ (Active / .NET)  │  │ (Active / .NET)  │
+└──────────────────┘  └──────────────────┘  └──────────────────┘
+                               │
+                               ▼
+                      ┌──────────────────┐
+                      │   ⚡ Spark        │
+                      │ Thought HUD      │
+                      │ (Active / Rust)  │
+                      └──────────────────┘
 ```
 
 ---
 
-## 📦 Disciplinary Modules Ledger
+## 📦 Sovereign Production Repositories
 
-| Module | Version | Status | Primary Capability | Sovereign Repository |
-| :--- | :--- | :--- | :--- | :--- |
-| **💀 Death** | **v1.0.0** | **`Active / Production`** | Unescapable AMOLED countdown lockdown, low-level Win32 keyboard hook (`WH_KEYBOARD_LL`), 4-tier media freeze, WASAPI audio isolation, and 0-RAM Task Scheduler trigger. | [**Death Repo ➔**](https://github.com/karansinghverma979/Death) |
-| **👁️ Overviews** | **v2.0.0** | **`Active / Production`** | Instant Google AI Overview summoner, `Ctrl+Alt+O` native Explorer shortcut (0 MB RAM), Win32 `SW_MAXIMIZE` full-screen enforcement, and standalone setup installer & vanisher. | [**Overviews Repo ➔**](https://github.com/karansinghverma979/Overviews) |
-| **⚡ Apex** | **v3.0.0** | **`Active / Production`** | DirectX GPU-accelerated Virtual Desktop & Z-Order (Topmost) switchboard HUD, `Ctrl+Alt+A` native Explorer shortcut (0 MB RAM), COM `IVirtualDesktopManager` discovery, and 1-minute auto-destruct. | [**Apex Repo ➔**](https://github.com/karansinghverma979/Apex) |
-| **⚡ Spark** | **v4.0.0** | **`Active / Production`** | Sub-10ms native Rust ephemeral thought capture HUD, `Ctrl+Alt+S` native Explorer shortcut (0 MB RAM), Void Black (#0A0C10) auto-focused card, smart bullet engine, and atomic append-only stream (`~/.gemini/Spark.md`). | [**Spark Repo ➔**](https://github.com/karansinghverma979/Spark) |
-| **🧭 Drift** | — | `Planned` | Real-time foreground task misalignment and tab-paralysis detection. | *Reserved* |
-| **🧘 Posture** | — | `Planned` | Micro-break physical ergonomics and screen strain supervisor. | *Reserved* |
-| **🛡️ Sentry** | — | `Planned` | Win32 AFK tracker and idle-aware intervention coordinator. | *Reserved* |
+Each disciplinary tool originated within Sakshi and now lives as an independent, fully maintained open-source project:
 
----
-
-## ⚡ Active Module Spotlight: Spark (Thought Capture HUD)
-
-Shipped in **Sakshi v4.0.0**, **Spark** is a sovereign native Rust thought capture HUD:
-
-* **Sub-10ms Cold Launch**: Native Rust machine code hits the screen instantaneously from OS disk cache.
-* **0 MB Idle RAM / 0% CPU**: Strictly on-demand execution summoned globally via `Ctrl + Alt + S`.
-* **Spacious Void Canvas**: 960x580 borderless card with dynamic amber border glow and smart auto-bullet formatting (`* ` and `1. `).
-* **Single-Instance Teleportation**: Win32 Mutex with COM `IVirtualDesktopManager` discovery teleports the window across virtual desktops.
-* **Token-Efficient Stream**: Appends directly to `~/.gemini/Spark.md` with zero JSON syntax tax.
-
-<p align="center">
-  <img src="Modules/Spark/Assets/Spark-HUD-Desktop.png" alt="Sakshi // Spark HUD" width="85%" />
-</p>
-
-👉 **For full documentation, shortcuts, and architecture, visit the [Spark Repository](https://github.com/karansinghverma979/Spark).**
+| Tool | Focus & Capabilities | Tech Stack | Production Repository |
+| :--- | :--- | :--- | :--- |
+| **💀 Death** | Unescapable AMOLED countdown lockdown, low-level Win32 keyboard hook (`WH_KEYBOARD_LL`), 4-tier media freeze, WASAPI audio ticks, 0-RAM Task Scheduler trigger. | .NET 9 WPF | [**karansinghverma979/Death ➔**](https://github.com/karansinghverma979/Death) |
+| **👁️ Overviews** | Instant Google AI Overview summoner, distraction-free search sentry, `Ctrl+Alt+O` shell shortcut, Win32 `SW_MAXIMIZE` enforcement, 0 MB idle RAM. | .NET 9 WinExe | [**karansinghverma979/Overviews ➔**](https://github.com/karansinghverma979/Overviews) |
+| **⚡ Apex** | DirectX GPU-accelerated Virtual Desktop & Z-Order (Topmost) switchboard HUD, `Ctrl+Alt+A` shortcut, COM `IVirtualDesktopManager` discovery, auto-destruct. | .NET 9 WPF | [**karansinghverma979/Apex ➔**](https://github.com/karansinghverma979/Apex) |
+| **⚡ Spark** | Sub-10ms native Rust ephemeral thought capture HUD, `Ctrl+Alt+S` shortcut, Void Black card, auto-bullet engine, atomic append-only Markdown stream. | Rust (LLVM) | [**karansinghverma979/Spark ➔**](https://github.com/karansinghverma979/Spark) |
 
 ---
 
-## ⚡ Active Module Spotlight: Death (Memento Mori)
+## 🧭 Future Roadmap (Incubator Concepts)
 
-The flagship active module currently shipped in **Sakshi v1.0.0** is the standalone **Death** engine:
+Concepts reserved for future platform exploration:
 
-* **Hardware-Accelerated OLED UI**: Sub-40ms DirectX WPF fullscreen takeover.
-* **Overwatch Escape Suppression**: Taskbar icon eradicated (`ShowInTaskbar="False"`), Win32 keyboard hook intercepts `Win`, `Alt+Tab`, `Alt+F4`, and `Ctrl+Esc`.
-* **Zero-RAM Hardware Scheduler**: Integrated directly with Windows Task Scheduler (`0 MB` idle RAM, `0%` idle CPU, Sleep-Skip enabled).
-* **Audio Synthesis & Media Freeze**: WinRT GSMTC media pausing with custom in-memory synthesized mechanical clock ticks.
-
-👉 **For full technical specifications, screenshots, and audio architecture, visit the [Death Repository](https://github.com/karansinghverma979/Death).**
-
----
-
-## 🚀 30-Second Quickstart & Master Switchboard (`Sakshi.ps1`)
-
-Manage the entire suite of 4 modules directly from the central orchestrator:
-
-```powershell
-# Launch interactive terminal matrix HUD
-.\Sakshi.ps1
-
-# Inspect zero-daemon health & installed module ledger
-.\Sakshi.ps1 status
-
-# Install and configure all 4 sovereign modules at once
-.\Sakshi.ps1 install-all
-
-# Complete teardown and vanish of all modules
-.\Sakshi.ps1 uninstall-all
-```
+* **🧭 Drift**: Foreground application context-drift and tab-paralysis detection.
+* **🧘 Posture**: Micro-break physical ergonomics and screen strain supervisor.
+* **🛡️ Sentry**: Win32 AFK tracker and idle-aware intervention coordinator.
 
 ---
 
@@ -107,36 +75,18 @@ Manage the entire suite of 4 modules directly from the central orchestrator:
 
 ```text
 Sakshi/
-├── .gitattributes                 # LF/CRLF normalization firewall
+├── .github/                      # Issue & PR Templates, OpenSSF CI Workflow
+├── .gitattributes                # LF/CRLF normalization firewall
 ├── .gitignore                    # Hardened Git exclusions
-├── .github/                      # OpenSSF CI & Dependabot governance
-│   ├── dependabot.yml
-│   └── workflows/ci.yml
-├── GEMINI.md                     # Autonomous platform guidelines & invariants
+├── GEMINI.md                     # Architectural principles & system invariants
 ├── LICENSE                       # MIT License
-├── README.md                     # Master platform documentation
-├── Release.md                    # Master release roadmap & version ledger
-├── Release-1.md                  # Sakshi v1.0.0 Engineering Dossier (Death)
-├── Release-2.md                  # Sakshi v2.0.0 Engineering Dossier (Overviews)
-├── Release-3.md                  # Sakshi v3.0.0 Engineering Dossier (Apex)
-├── Release-4.md                  # Sakshi v4.0.0 Engineering Dossier (Spark)
-├── Sakshi.ps1                    # Sovereign master orchestrator switchboard
+├── README.md                     # Master Ecosystem Index & Architecture Blueprint
 └── SECURITY.md                   # OpenSSF coordinated vulnerability disclosure
 ```
 
 ---
 
-## 📝 Release Dossiers & Engineering Specifications
+## 📄 License & Governance
 
-Sakshi tracks every version milestone through structured engineering dossiers:
-
-* **[`Release-1.md`](Release-1.md)**: Sakshi v1.0.0 — Standalone Death Engine, 0-RAM Task Scheduler, Low-Level Hook Lockdown.
-* **[`Release-2.md`](Release-2.md)**: Sakshi v2.0.0 — Overviews Module, Native `Ctrl+Alt+O` Shell Shortcut, GitHub Distribution Triad.
-* **[`Release-3.md`](Release-3.md)**: Sakshi v3.0.0 — Apex Module, Native `Ctrl+Alt+A` Z-Order & Desktop Switchboard HUD.
-* **[`Release-4.md`](Release-4.md)**: Sakshi v4.0.0 — Spark Module, Native `Ctrl+Alt+S` Rust Thought Capture HUD & Markdown Stream.
-* **[`Release.md`](Release.md)**: Master release roadmap, contributor guide, and cross-release index.
-
----
-
-*   **Architect:** Karan Singh Verma
-*   **System Version:** Sakshi v4.0.0 (Modular Platform Release)
+* **License**: [MIT License](LICENSE)
+* **Author & Architect**: [Karan Singh Verma](https://github.com/karansinghverma979)

@@ -27,15 +27,11 @@ $RECYCLE.BIN/
 *.userosscache
 *.sln.docstates
 
-# Local custom quote configuration
-Modules/Death/quote.txt
-
-# Local custom visual & scratch files
-Modules/Death/Visuals/
+# Scratch & Temporary Files
 scratch/
 temp/
 
-# .NET & Rust Build Outputs & Binaries
+# Build Outputs & Binaries
 **/bin/
 **/obj/
 **/publish/
